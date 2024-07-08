@@ -87,6 +87,33 @@ WAS ex: enginX , Apache ( 대부분 동 * 정적 컨텐츠 가능 ) , TomCat , J
 
 
 
+* TestCode *
+
+- Bug: softwear 가 예상하지 못한 result 내는 것
+
+- spring 제공 테스트 환경: Junit 
+
+
+
+
+* spring MVC *
+
+- Model View Controller 디자인 패턴
+
+Client -> ( request ) -> Web Container ( Servlet )
+
+Servlet 에서 HttpServletRequest, Response 객체 생성 ( 알아서 요청 분석 )
+
+어떤 Servlet 과 매칭되는지 Servlet 분석 ( 요청이 /api/hello 일 때, 매칭되는 서블릿의 정보를 읽고 동작 )
+
+찾은 서블릿으로 어떤 Method 인지 확인, Service 로직 수행, HttpServletResponse 를 통해 Client 로 반환.
+
+
+dispatcherServlet : 전달하는 서블릿
+
+request -> dispatcherServlet -> handler Mapping  -> controller -> 
+
+model and logical view name -> viewResolver -> view -> response 
 
 
 
@@ -97,11 +124,7 @@ WAS ex: enginX , Apache ( 대부분 동 * 정적 컨텐츠 가능 ) , TomCat , J
 
 
 
-
-
-
-
-
+1주차 노션 링크:
 
 https://teamsparta.notion.site/Spring-Master-1-a2cd0bc80a5b495c9efa9c035c0f81f0#3bf256a9ae89490d8e17c4fa15dc693c
 
