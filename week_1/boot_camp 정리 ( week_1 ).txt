@@ -46,11 +46,48 @@ REST 라는 아키텍처 지침을 지키는 API
 
 	- 동적인 컨텐츠를 보여줘야 할 때 WAS 에 요청
 
-- WAS: Login 후 MyPage ( 동적인 컨텐츠 )
+- WAS: 
 
-WAS ex: enginX , Apache ( 대부분 동 * 정적 컨텐츠 가능 )
+	- Login 후 MyPage ( 동적인 컨텐츠 )
 
-tomcat , jboss
+WAS ex: enginX , Apache ( 대부분 동 * 정적 컨텐츠 가능 ) , TomCat , Jboss
+
+- apache tomcat 은 WebServer 와 WAS 를 합쳐 구현한 모듈이다.
+
+	- client 의 요청에 따라 기능 사용.
+
+
+
+
+* Spring framework *
+
+- IoC/DI , AOP , PSA 핵심 기능 사용
+
+위의 기능들을 사용하려면 xml 파일에 여러 기능들을 세팅해줘야 했다.
+
+- SpringBoot 나오면서 xml 기반 버리고 Annotation 기반 기능을 적극 사용함으로서 간편하게 설정 자동화.
+
+	- library 버전도 전부 자동으로 맞춰준다. ( 호환성 )
+
+	- 내장 Apache Tomcat ( 로컬 서버 , springframework.boot starter-web lib )
+
+
+
+
+* http *
+
+- 데이터를 주고 받는 통신 규약
+
+- header
+
+	- meta data 를 추가로 보내서 서버에서 헤더 정보를 읽고 로직 처리
+
+	- get method 제외 , PayLoad 를 보낼 수 있다. ( HTTP Body )
+
+
+
+
+
 
 
 
