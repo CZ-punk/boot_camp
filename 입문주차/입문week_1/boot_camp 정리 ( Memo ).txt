@@ -1,0 +1,55 @@
+boot_camp 정리 ( SQL )
+
+
+
+* create *
+
+제약조건
+
+	- AUTO_INCREMENT: Column 값 중복 방지 기능 , 1씩 자동 증가되는 고유번호 생성
+
+	- NOT NULL: 해당 필드는 NULL 값 저장 불가
+
+	- UNIQUE: 해당 필드는 서로 다른 값을 가져야만 함
+
+	- PRIMARY KEY: 해당 필드는 NOT NULL 과 UNIQUE 제약 조건의 특징 동시에 가진다.
+
+	- FOREIGN KEY: 하나의 테이블을 다른 테이블에 의존하게 만들며 데이터의 무결성 보장
+
+	- CASCADE: FOREIGN KEY 로 연관된 데이터를 삭제, 변경할 수 있다.
+
+
+
+
+* db *
+
+connection 연결  ->  sql 작성 후 요청  ->  결과 반환
+
+db platform 마다 방식이 다름  =>  jdbc 표준 인터페이스로 해결! ( java 에서 제공하는 db 연결 방법 )
+
+
+jdbc driver ( 각각의 db platform 구현체를 jdbc 표준 인터페이스에 맞게 구현해서 라이브러리 제공 )
+
+연결해서 가져다 사용하면 된다.
+
+
+
+
+
+* sql query *
+
+
+create table "table name" (
+
+	"column name" "column type" "contraints" comment 'comment contents';
+
+
+)
+
+
+
+
+
+
+
+꿀팁: ctrl + alt + L 자동 정렬

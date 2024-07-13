@@ -1,0 +1,110 @@
+boot_camp 정리 ( 본격 JWT )
+
+
+
+Util class:
+
+	- 특정한 매개변수에 대한 작업을 수행하는 메서드들이 존재하는 클래스
+
+	- 1개의 모듈로서 독립적으로 동작하는 클래스
+
+
+JWT 다루는 방법 2가지
+
+- 1. response header 에 직접 담아 보내기
+
+	- coding 량 줄음 ㅋㅋ
+
+- 2. response cookie 객체 만들어 담아 보내기 
+
+	- Cookie 객체를 생성하므로 cookie 의 method 를 사용해서 만료기간 등 다른 옵션 부여 가능
+	
+	- 클라이언트의 쿠키 저장소에 자동으로 쿠키 저장된다.
+
+
+
+@PostConstruct:
+
+- DI 직후, 초기화를 수행하는 메서드 
+
+- Bean 초기화됨과 동시에 의존성 주입하며 생성자 생성 ( Bean 여러번 초기화되는 것 방지 )
+
+- 강의에서는 JwtUtil class 생성자를 호출한 뒤, @PostConstruct code 가 최초 1번 실행.
+
+	- base64 decoding 하기 위해 ( 강의에서secret key 를 base64 로 encoding 했기 때문 )
+
+	- key = Keys.hmacShakKeyFor( { Secret Key 의 byte 값 } ) 
+
+		- 위 메서드는 Secret key 를 Setting 한다.
+
+
+
+@Enumerated 
+
+- Enum Type 을 DB 의 Column 에 저장할 때 사용
+
+- 옵션으로 value = EnumType.String 을 줘야 값의 이름이 그대로 저장된다.
+
+	- 옵션 설정 안주면 순서 ( 번호 ) 로 저장된다. ( default = ORDINAL )
+
+
+
+암호화
+
+- 단방향 알고리즘을 사용해야 한다. ( 암호화만 가능하고, 복호화 불가능 )
+
+
+
+@EnableWebSecurity 
+
+- Spring Security 지원 가능하게 한다. ( @JpaAuditing 처럼 사용하겠다는 의미 )
+
+- security 는 Session 방식을 지원 ( default login 정보를 준다. ) ( 필터 기능 토대로 사용 )
+
+form login 기반 인증:
+
+- 인증이 필요한 url 요청시 인증 되지 않으면 로그인 페이지로 redirect 된다.
+
+
+
+
+* 내부 인증 로직 순서 *
+
+- UsernamePasswordAuthenticationFilter
+
+1. username & password 를 보내면 UsernamePasswordAuthenticationFilter 가 동작
+
+2. 해당 filter 에서는 올바른 정보가 오면 인증된 사용자 정보가 담긴 
+
+UsernamePasswordAuthenticationToken 을 생성해서 AuthenticationManager 에게 넘겨 인증 시도!
+
+3. 성공시
+
+	- SecurityContextHolder 에 Authentication 을 Setting 한다. 
+
+		- ( usernamePasswordAuthenticationToken 은 Authentication 의 종류 중 하나이다. )
+
+ 실패시
+
+	- SecurityContext 를 비운다.
+
+
+
+
+* SecurityContextHolder *
+
+SecurityContextHolder 내부에 SecurityContext 가 있고,
+
+SecurityContext 내부에 Authentication 객체가 담기고,
+
+Authentication 객체 내부에는 Principal , Credentials , Authorities 필드가 존재한다.
+
+
+- Principal: 사용자 식별 ( 보통 userDetails 를 넣는다 )
+
+- Credentials: 주로 비밀번호, 대부분 사용자 인증에 사용한 후 비움.
+
+- Authorities: 사용자에게 부여한 권한을 GrantedAuthority 로 추상화하여 사용.
+
+	- Authentication 객체 생성할 때 사용
+

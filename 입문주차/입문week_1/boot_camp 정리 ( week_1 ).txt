@@ -1,0 +1,250 @@
+boot_camp 정리 ( week_1 )
+
+
+
+* gradle *
+
+- 빌드 자동화 시스템
+
+- 우리가 작성한 java code 를 설정에 맞게 자동으로 빌드
+
+실행 가능한 결과물인 jar 파일로 생성
+
+
+
+
+* build.gradle *
+
+- groovy 언어로 작성된 gradle 스크립트 파일
+
+- Library 들을 관리
+	
+- dependencies 에 주입받고자 하는 라이브러리를 입력하면 Maven Repo 인 외부 저장소로부터 다운로드
+
+- External Libraries  파일에 외부로부터 다운로드 받은 Library 들이 저장되어 있음.
+
+
+
+* Server *
+
+사용자의 요청이 해당 서버에 정확히 도달하게 Ip주소로 요청 ( 위치주소 식별 )
+
+주소 ( IP ) + 받는 사람 ( PORT ) : ex. localhost:8080 
+
+- RESTFUL API : API 작동 방식에 조건을 부가하는 소프트웨어 아키텍처
+
+REST 라는 아키텍처 지침을 지키는 API 
+
+
+
+
+* WebServer VS WebApplicationServer(WAS) *
+
+- WebServer: 
+
+	- html 같은 문서를 사용자에게 전달 ( 정적인 컨텐츠 )
+
+	- 동적인 컨텐츠를 보여줘야 할 때 WAS 에 요청
+
+- WAS: 
+
+	- Login 후 MyPage ( 동적인 컨텐츠 )
+
+WAS ex: enginX , Apache ( 대부분 동 * 정적 컨텐츠 가능 ) , TomCat , Jboss
+
+- apache tomcat 은 WebServer 와 WAS 를 합쳐 구현한 모듈이다.
+
+	- client 의 요청에 따라 기능 사용.
+
+
+
+
+* Spring framework *
+
+- IoC/DI , AOP , PSA 핵심 기능 사용
+
+위의 기능들을 사용하려면 xml 파일에 여러 기능들을 세팅해줘야 했다.
+
+- SpringBoot 나오면서 xml 기반 버리고 Annotation 기반 기능을 적극 사용함으로서 간편하게 설정 자동화.
+
+	- library 버전도 전부 자동으로 맞춰준다. ( 호환성 )
+
+	- 내장 Apache Tomcat ( 로컬 서버 , springframework.boot starter-web lib )
+
+
+
+
+* http *
+
+- 데이터를 주고 받는 통신 규약
+
+- header
+
+	- meta data 를 추가로 보내서 서버에서 헤더 정보를 읽고 로직 처리
+
+	- get method 제외 , PayLoad 를 보낼 수 있다. ( HTTP Body )
+
+
+
+
+* TestCode *
+
+- Bug: softwear 가 예상하지 못한 result 내는 것
+
+- spring 제공 테스트 환경: Junit 
+
+
+
+
+* spring MVC *
+
+- Model View Controller 디자인 패턴
+
+Client -> ( request ) -> Web Container ( Servlet )
+
+Servlet 에서 HttpServletRequest, Response 객체 생성 ( 알아서 요청 분석 )
+
+어떤 Servlet 과 매칭되는지 Servlet 분석 ( 요청이 /api/hello 일 때, 매칭되는 서블릿의 정보를 읽고 동작 )
+
+찾은 서블릿으로 어떤 Method 인지 확인, Service 로직 수행, HttpServletResponse 를 통해 Client 로 반환.
+
+
+dispatcherServlet : 전달하는 서블릿
+
+request -> dispatcherServlet -> handler Mapping  -> controller -> 
+
+model and logical view name -> viewResolver -> view -> response 
+
+
+
+
+
+* Controller *
+
+- static 폴더의 hello.html 파일을 호출할 경우: localhost:8080/hello.html 작성하면 끝 ( 정적이라 불변 )
+
+- controller 를 통해 정적 컨텐츠를 호출하고 싶을 경우: thymeleaf 사용X , String "hello.html" 을 반환.
+
+	- thymeleaf 를 사용할 때 정적 컨텐츠를 컨트롤러를 통해 호출하고 싶을 경우: redirect hello.html !
+
+
+
+
+* Jackson Lib *
+
+- ObjectMapper 객체를 통해 Object to Json 가능
+
+ 	- String json = objectMapper.writeValueAsString( " json 형태로 바꿀 Object " ); 
+	
+	- getter 꼭 필요! => 직렬화하기 위해서!
+
+- ObjectMapper 객체를 통해 Json To Object 가능
+
+	- String json = "{\"name\":\"choi\",\"age\":26}"; 를
+
+	- Star object = mapper.readValue(json, Star.class); 
+	
+		- readValue( " Json 형태 String " , " 변환할 인스턴스 클래스 " ) 로 원하는 객체의 형태로 변환
+
+	- Default Constructor & ( Getter or Setter ) 필요 
+
+	- 바꿀 인스턴스 클래스의 필드 변수명과 정확하게 일치해야 매핑되어 변환된다.
+
+
+뭔가 부족할 때의 상황
+
+- 인스턴스 클래스의 필드가 json 형태에서 누락되면 해당 필드는 null or 0 처리!
+
+- 인스턴스 클래스의 필드가 아닌 json 형태를 변환하려고 하면 error !
+
+
+
+
+
+* Request *
+
+- @RequestParam 애노테이션 생략시 자동으로 url 은 query Parameter 처리된다.
+
+- 만약 꼭 queryParam 필요한 상황에서 @RequestParam 애노테이션이 없다면
+
+	- 해당 컨트롤러 메서드를 호출해도 정상 동작 => 이러면 안 됨.
+
+	- 애노테이션 작성시 필수 param 을 받아야만 동작 ( 없으면 400 Error )
+
+	- 만약 해당 param 값이 없어도 정상 동작시키고 싶다면 @RequestParam(required = false) 설정!
+
+	- 단, primitive type 인 int, double 등의 param 은 생략할 수 없다. 
+		
+		- 오직 wrapper type 인 Integer, Double 만 required=false 옵션이 허용된다. 
+
+		- null 로 반환해야 하기 때문
+
+
+
+
+* @ModelAttribute *
+
+- body 정보를 읽고 object 로 변환해준다. ( 내부적으로 jackson lib 의 objectMapper 를 사용해 변환 )
+
+- @ModelAttribute 는 http body 의 정보를 이용해 생성자 통해 객체를 생성한다.
+
+	- 이 때, http body 는 key value 로 해당 클래스의 필드를 매핑하는데 name 이 다르다면
+
+		- null 을 반환한다. ( http body 의 key 값 == 생성자의 파라미터 name )
+
+위는 http body 를 통해 받은 데이터의 변환
+
+아래는 queryParam 을 통해 받은 데이터의 변환
+
+- GET http://localhost:8080/hello/request/form/param/model?name=Robbie&age=95
+
+url 로 요청해도 @ModelAttribute 를 통해 값을 매핑해서 받을 수 있다. 물론 이때도 naming 같아야 한다.
+
+- - queryParam 으로 많이 올 때 DTO 만들어서 ModelAttribute 로 받으면 좋겠당
+
+- @ModelAttribute 도 생략 가능!
+
+
+생략 되어 있을 때의 Spring 의 판단!
+
+- 파라미터로 simple value type 시 ( date, int 등 ) : @RequestParam 생략되어 있다고 판단
+
+- 파라미터로 직접 만든 Object.class type 시 : @ModelAttribute 생략되어 있다고 판단
+
+
+
+
+
+
+
+* Memo CURD code *
+
+- client 는 Ajax 라는 것을 통해 서버로 요청.
+
+- 해당 요청에 대해서 Json 데이터만 던지게 구현할 것.
+
+
+List<MemoResponseDto> responseList = memoList.values().stream()
+                .map(MemoResponseDto::new).toList();
+        
+- stream 으로 memoList.values 로서 나오는 모든 Memo 객체들을 루프를 돌린다.
+
+루프를 하나씩 돌려 받은 Memo 를 통해 MemoResponseDto 의 생성자를 통해 객체를 생성한다.
+
+( 이때, MemoResponseDto 는 Memo 를 파라미터로 받아 생성자를 만들 수 있게 정의되어 있기 때문에 가능 )
+
+- 루프를 돌려 만든 모든 MemoResponseDto 를 toList 로 List 형태로 반환한다.
+
+
+
+
+
+
+
+
+
+
+꿀팁: 
+
+ctrl + alt + o : 사용하지 않는 import 정리
+

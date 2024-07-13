@@ -1,0 +1,46 @@
+week_2 homeWork
+
+
+
+
+* Query Method *
+
+- 요청하고자 하는 Sql 을 Method 이름을 지정해서 요청할 수 있다. 
+
+	- 정해진 규칙이 존재한다. 
+
+	- 규칙에 따라 method 이름을 분석하여 SimpleJpaRepository 에서 대신 구현해준다.
+
+ex)
+
+-  findAllByOrderByModifiedAtDesc() => modifiedAt 을 내림차순 기준으로 정렬해서 모든 Entity 조회
+
+
+* 숙제 *
+
+- Query Method Contains
+
+	- keyword 를 포함한 contents 가 존재하는 memo 객체 전부를 조회하고 싶다.
+
+		- like ? contains ? startingWith ? 비교해보자.
+
+
+- Like: select ... like :usernmae			=> 본문과 일치
+
+- StartingWith: select ... like :username%		=> 처음 시작만 같으면 됨
+
+- EndingWith: select ... like %:username		=> 마지막만 같으면 됨
+
+- Containing: select ... like %:username%		=> 포함만 하면 됨
+
+즉, keyword 를 " 포함 " 하고 있는 contents 에 대한 모든 memo 를 조회하려면 Contains 를 사용해야 한다.
+
+
+참고:
+
+- Query Method 작성시
+
+	- findAllByContentsContains , Containing , IsContaining 은 전부 동일한 query 를 날린다. 
+
+
+

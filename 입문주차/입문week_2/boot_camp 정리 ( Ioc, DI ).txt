@@ -1,0 +1,124 @@
+boot_camp 정리 ( IoC, DI ) 
+
+
+
+
+* IoC ( 제어의 역전 ) *
+
+ex )
+
+Consumer 와 Food 의 강한 결합
+
+Consumer 의 method 중 eat() { Food.print() } 
+
+=> 이를 Consumer 에서 Food 로 제어의 흐름을 갖는다. ( Consumer 가 주체 )
+
+
+Consumer 와 Food 의 제어의 역전
+
+main method 를 통해 Consumer.class 를 필드로 Food 를 정의하고 생성자 주입을 통해 
+
+main 에서 Food 를 받고 eat method 를 수행한다면 food 에서 consumer 로 제어의 흐름이 역전이 된 것.
+
+=> consumer 는 가만히 있고, food 가 주체가 되어 동작한다. ( 제어의 역전 )
+
+
+즉, 결론은 변경에 영향을 받냐 어느정도 받냐의 차이이다. 
+
+당연히 변경에 대해 영향이 없는 것이 좋다.
+
+=> DI 라는 패턴을 이용해 Ioc ( 제어의 역전 ) 설계 원칙을 지키게 된 것이다.
+
+( 생성자 주입, Setter 주입, 필드 주입 )
+ 
+
+
+
+
+
+* 현재 Memo project 의 문제점 *
+
+- MemoService 의 MemoRepository 생성 코드 중복
+
+- MemoController 의 MemoServcie 생성 코드 중복
+
+- 생성자 주입으로 private final MemoService memberService 를 
+
+	public MemoControllerV3(JdbcTemplate JdbcTemplate) {
+        	this.memoService = new MemoService(JdbcTemplate);
+    	}
+ 
+위와 같이 주입 받아서 중복 코드를 제거한다. ( MemoService 와 MemoRepository 와의 관계도 동일 )
+
+
+아직도 문제!
+
+=> Controller 가 Service 객체를 생성하고, Service 가 Repository 객체를 생성하고 있다.
+
+제어의 흐름 : Controller -> Service -> Repository 
+
+ex) consumer 가 직접 음식을 만들어 먹고 있는 상황 
+
+이미 있는 음식을 Consumer 는 먹기만 하게끔 바꿔야 한다. 
+
+일일히 new 해서 원하는 Service or Repository 를 생성해야 하는 불편함이 생긴다.
+
+해결 방법:
+
+=> 미리 만들어진 Service 와 Repository 를 파라미터로 받아서 사용하게만 구현하면 된다.
+
+( 강한 결합 -> 약한 결합으로 변경 )
+
+ 
+
+
+
+* 어떻게 미리 Service 와 Repository 를 만들거임? *
+
+- Spring FrameWork 에서 Spring container 를 이용해 Bean 으로서 생성해서 관리해준다.
+
+@Service , @Repository 를 통해 Bean 으로 등록해준다. @Component 도 내부에 존재한다.
+
+Spring containner ( = IoC Containner )
+
+@SpringbootApplication 이 달린 Application class 가 포함된 하위 디렉토리를 
+
+전부 Component Scan 의 대상이 되고, Bean 으로 등록한다. ( Camel 표기법으로 Bean 의 이름을 등록 )
+
+
+ex) MemoService.class  -> Bean name: memoService
+
+
+Bean 으로 등록된 Service 또는 Repository 를 주입받으려면은
+
+@Autowired annotation 을 작성해줘야 하는데 생성자가 1개일 때는 생략 가능하다. ( Spring 4.x 버전~ )
+
+
+
+
+* DI 하는 다른 방법 *
+
+public MemoService(ApplicaitonContext context) { }
+
+: 직접 IoC containner 에 접근해서 가져오는 방법 
+
+1. Bean 이름으로 가져오기 ( 수동으로 containner 에 접근해서 Bean 가져와서 직접 주입 )
+
+- MemoRepository memoRepository = (MemoRepository) context.getBean("memoRepository");
+
+2. Bean class 형식으로 가져오기
+
+- MemoRepository memoRepository = context.getBean(MemoRepository.class);
+
+( class type 으로 Bean 을 조회해서 가져와서 직접 주입 )
+
+
+
+
+3 layer annotation 
+
+- @Controller , @Service , @Repository ( Bean 으로 등록하는데 역할을 명확하게 구분하기 위해 사용 )
+
+
+
+

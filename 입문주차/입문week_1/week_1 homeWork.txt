@@ -1,0 +1,148 @@
+week_1 homeWork
+
+1번
+
+👉 수강생을 관리하는 MANAGER 테이블을 만들어보세요.
+
+- 컬럼은 총 id, name, student_code 입니다.
+- id는 bigint 타입이며 PK입니다.
+- name은 최소 2자 이상, varchar 타입, not null 입니다.
+- student_code는 STUDENT 테이블을 참조하는 FK이며 not null 입니다.
+- FK는 CONSTRAINT 이름을 ‘manager_fk_student_code’ 로 지정해야합니다.
+
+1번 답
+
+create table if not exists MANAGER (
+    id bigint primary key comment 'id',
+    name varchar(10) not null comment 'name',
+    student_code varchar(100) not null comment 'foreign key',
+    constraint check_name_length_2 check ( length(name) >= 2 ),
+    foreign key (student_code) references student(student_code)
+)
+
+
+2번 
+
+ALTER, MODIFY를 이용하여 MANAGER 테이블의 id 컬럼에 AUTO_INCREMENT 기능을 부여하세요.
+
+2번 답
+
+alter table manager modify column id BIGINT NOT NULL  AUTO_INCREMENT;
+
+=> not null 굳이 필요 없음. ( column id bigint 만 있어도 필드 유추 가능 )
+
+3번
+
+👉 INSERT를 이용하여 수강생 s1, s2, s3, s4, s5를 관리하는 
+
+managerA와 s6, s7, s8, s9를 관리하는 managerB를 추가하세요.
+
+- AUTO_INCREMENT 기능을 활용하세요
+
+3번 답
+
+insert into manager(name, student_code) values ('managerA', 's1');
+insert into manager(name, student_code) values ('managerA', 's2');
+insert into manager(name, student_code) values ('managerA', 's3');
+insert into manager(name, student_code) values ('managerA', 's4');
+insert into manager(name, student_code) values ('managerA', 's5');
+
+
+insert into manager(name, student_code) values ('managerB', 's6');
+insert into manager(name, student_code) values ('managerB', 's7');
+insert into manager(name, student_code) values ('managerB', 's8');
+insert into manager(name, student_code) values ('managerB', 's9');
+
+
+4번
+
+JOIN을 사용하여 managerA가 관리하는 수강생들의 이름과 시험 주차 별 성적을 가져오세요.
+
+4번 답
+
+select m.name, s.name, ex.score from manager m join student s on m.student_code = s.student_code join exam ex on m.student_code = ex.student_code where m.name = 'managerA';
+
+
+5번
+
+STUDENT 테이블에서 s1 수강생을 삭제했을 때 
+
+EXAM에 있는 s1수강생의 시험성적과 MANAGER의 managerA가 관리하는 수강생 목록에 
+
+자동으로 삭제될 수 있도록 하세요.
+
+- ALTER, DROP, MODIFY, CASCADE 를 사용하여 EXAM, MANAGER 테이블을 수정합니다.
+
+5번 답
+
+alter table manager add constraint manager_fk_student_code foreign key (student_code) references student(student_code) on delete cascade ;
+
+
+
+
+
+
+
+
+
+
+선생 정답:
+
+1번
+
+create table if not exists manager 
+(
+	id bigint primary key,
+	
+	name varchar(100) not null,
+	
+	student_code varchar(100) not null,
+
+	constraint manager_fk_student_code foreign key (student_code) references student(student_code)
+
+);
+
+
+2번
+
+alter table manager modify column id bigint auto_increment;
+
+
+3번
+
+insert into manager(name, student_code) values ('managerA', 's1');
+insert into manager(name, student_code) values ('managerA', 's2');
+insert into manager(name, student_code) values ('managerA', 's3');
+insert into manager(name, student_code) values ('managerA', 's4');
+insert into manager(name, student_code) values ('managerA', 's5');
+
+insert into manager(name, student_code) values ('managerB', 's6');
+insert into manager(name, student_code) values ('managerB', 's7');
+insert into manager(name, student_code) values ('managerB', 's8');
+insert into manager(name, student_code) values ('managerB', 's9');
+
+
+4번
+
+생략
+
+
+
+
+5번
+
+기존 constraint 지워야 한다.
+
+alter table exam drop constraint exam_fk_student_code;
+
+alter table exam add constraint exam_fk_student_code foreign key (student_code) 
+
+references student(student_code) on delete cascade;
+
+
+
+alter table manager drop constraint manager_fk_student_code;
+
+alter table manager add constraint manager_fk_student_code foreign key (student_code) 
+
+references student(student_code) on delete cascade;

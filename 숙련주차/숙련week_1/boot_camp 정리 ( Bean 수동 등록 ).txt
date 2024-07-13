@@ -1,0 +1,102 @@
+boot_camp 정리 ( Bean 수동 등록 )
+
+
+
+
+
+* Init Setting *
+
+- application.class level 의 annotation 으로 
+
+@SpringBootApplication(exclude = SecurityAutoConfiguration.class) 를 걸어서 
+
+Spring security 가 자동으로 제공하는 기능을 일단 끄고 추후 배운 다음에 원리를 알고 사용하자.
+
+
+
+
+* Bean 수동 등록은 언제할까? *
+
+- 기술적 문제 or 공통 관심사를 처리할 때 사용하는 객체들 수동 등록하는 것이 좋다.
+
+	- 공통 로그처리와 같은 비즈니스 로직을 지원하기 위한 부가적이고 공통적 기능들을
+
+	기술지원 Bean 이라고 부르고 수동 등록한다.
+
+	- 비즈니스 로직 Bean 보다 그 수가 적기 때문에 수동 등록하기에 부담스럽지 않음
+
+	- 또한 수동 등록된 Bean 에 문제가 발생했을 때, 위치 파악이 쉽다는 장점 존재.
+
+
+
+
+* Bean 수동 등록 방법 *
+
+- config 파일을 생성한다.  ( @Configuration 을 걸어준다. )
+
+- 내부에 @Bean 애노테이션을 걸고, Bean 으로 등록할 객체를 리턴 받는 메서드를 생성한다.
+
+ex)
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+- BCryptPasswordEncoder : 비밀번호를 암호화해주는 hash 함수이다. ( PasswordEncoder 의 구현체 )
+
+boolean matches = passwordEncoder.matches(inputPassword, encodePassword);
+
+matches method 를 사용해서 첫번째 파라미터로 내가 입력한 비밀번호를 넣고,
+
+두번째 파라미터로 encoded 된 비밀번호, 즉 db 에 회원으로 등록된 나의 비밀번호를 비교해준다.
+
+동일하면 true, 다르면 false 
+
+=> 보안상의 문제로 사용자의 비밀번호를 encoding 하여 관리하고 로그인을 위해 
+
+input 으로 들어온 비밀번호를 내부적으로 matches method 를 통해 비교하여 검증 후, 로직을 처리.
+
+
+
+
+
+* 같은 Type 의 Bean 이 2개라면? *
+
+- interface 구현체를 @Component 처럼 Bean 으로 등록하면 해당 Interface 도 Bean 등록
+
+ex) Food interface 의 구현체로 Pizza , Chicken.class 를 구현 => 같은 타입의 빈이 2개가 생성됨
+
+
+Test code 작성시 문제 발생
+
+	@Autowired
+	Food food;
+
+- 이 때 동일한 Food Type 의 Bean 이 Chicken 과 Pizza 로 총 2개 등록되어 있으므로,
+
+어떤 Bean 을 주입 받을 지 몰라서 나타나는 오류이다.
+
+( 즉, @Autowired 는 Bean 의 타입으로 빈을 지정해 주입받는다. )
+
+	@Autowired
+	Food pizza;
+
+- 위 방식처럼 변수명을 bean 의 이름으로 주면 pizza 구현체를 Bean 으로서 주입받아 온다.
+
+@Autowired 는 Bean 을 주입시킬 때,
+
+1. Type 을 보고 주입한다.
+
+2. 동일 Type 존재하면, 변수명 ( 이때 변수명은 Bean name ) 을 보고 주입한다.
+
+
+
+
+cf. @Primary annotation 걸면 해당 구현체 클래스는 우선순위가 1순위가 되어 주입된다.
+
+cf. @Qualifier annotation 걸고 이름을 지정해준다. 
+
+	- Autowired 받을 때 Qualifier 이름 지정해준 것 동일하게 달면 해당 class 가 Bean 으로 주입된다.
+
+- @Primary 보다 @Qulifier 우선순위가 더 높다.

@@ -1,0 +1,135 @@
+boot_camp 정리 ( Entity 상태 ) 
+
+
+
+
+* 영속 & 비영속 *
+
+
+- Entity.class 를 em.persist 에 인자로서 넣어주지 않으면 ( 순수한 entity class 상태 ) 를 비영속 상태.
+
+- persist(entity) method 를 수행하면 entity 를 영속화시켜 영속성 컨텍스트에 저장하는 것. 영속 상태
+
+debugging 확인:
+
+persist 이후, entityEntry 를 확인하면 MANAGED 상태 즉, 관리 상태로 되어 있는 것을 확인할 수 있다.
+
+
+
+
+* 준영속 상태 *
+
+- 영속 상태로 관리하다 더 이상 관리하지 않기 위해 비영속화 시키는 Entity , 준영속 상태
+
+- 준영속 상태로 만드는 방법 
+
+	- 1. detach method: 특정 Entity 를 준영속 상태로 만든다.
+
+	- 2. clear method: 1차 캐시 전부 비워버린다. ( 전부 준영속 상태로 만든다. )
+
+	- 3. close method: entity manager 를 close 함으로서 영속성 컨텍스트를 사용하지 않게 한다.
+
+		- 다시 db 로부터 find 해서 가져올 수 조차 없다.
+
+
+- 준영속 상태인 Entity 를 수정하여도 영속성 컨텍스트가 관리하지 않기 때문에 변경감지가 이뤄지지 않음.
+
+	- commit 해도 update 되지 않음
+
+
+
+
+
+
+* 준영속 상태에서 다시 영속 상태로 바꾸기 *
+
+merge!
+
+- em.merge(entity) 동작
+
+	- 파라미터로 전달된 Entity 의 식별자 값으로 영속성 컨텍스트를 조회
+
+		- 영속성 컨텍스트에 존재하지 않는다면?
+
+			- 1. db 에서 새롭게 조회.
+
+			- 2. 조회한 entity 를 영속성 컨텍스트에 저장
+
+			- 3. 파라미터로 준 entity 와 db 에서 새로 조회한 entity 를 병합
+
+			- 4. 만약 다르다면 파라미터값로 준 entity 를 기준으로 db update query 날린다.
+	
+			
+		- 영속성 컨텍스트에도 없고, db 에도 존재하지 않는다면?
+
+			- 1. 파라미터로 준 Entity 를 영속성 컨텍스트에 새로 저장
+
+			- 2. 새로 저장된 entity 를 db 에 insert query 날린다.
+
+
+merger( db 에 없는 entity ) 를 하고 debugging 하면
+
+action Queue 에 insertions = ExecutableList{size=1} 표시를 확인할 수 있다.
+
+
+
+
+* Merge ( insert 될 때, 즉 db 에 entity 가 없을 경우 ) *
+
+- 객체를 java code 로 생성 ( memo )
+
+- merge(memo) 호출
+
+- select query 를 날려 merge 를 한 entity 가 db 에 있는지 조회 ( test code 에서는 없음, mergeMemo )
+
+	- em.contains() 로 확인해보면
+
+		- 우리가 생성한 객체인 memo 는 영속성 컨텍스트로 관리 X ( false )
+
+		- merge(memo) 로 반환 받은 Memo 객체인 mergeMemo 는 영속성 컨텍스트로 관리 ( true )
+
+- tx commit 후 insert sql 을 보내면서 db 에 저장한다.
+
+
+
+여기서 new Memo 로 선언한 memo 는 영속성 컨텍스트에 관리하지 않고, merge 를 파라미터로 넣고,
+
+db 에 없으면 생성한 memo 의 pk 값만 받아서 영속성 컨테스트에 완전 새로운 객체를 반환해서 관리.
+
+( 우리가 생성했던 memo 는 pk 싸개, 파라미터 용이다. )
+
+
+
+
+* Merge ( update 될 때, 즉 db 에 entity 가 존재할 경우 ) *
+
+- memo 객체를 find 해서 db로부터 받아온다. ( 영속성 컨텍스트에서 관리 )
+
+- detach 로 준영속 상태로 만든다. ( 영속성 컨텍스트에서 관리X )
+
+- memo 객체를 수정한 후, merger 를 호출 
+
+- merge 의 파라미터로 준 entity 의 pk 값을 통해 db 에 select query 를 날려 존재하는지 확인 ( 존재함 )
+
+- merge 로부터 반환받은 mergeMemo 의 contents 를 확인하면 merge 호출 전에 수정한 내용과 동일
+
+- 처음 find 로 가져온 memo 는 영속성 컨텍스트에 여전히 없음
+
+- merge 를 통해 새로 가져온 mergeMemo 는 영속성 컨텍스트에서 관리
+
+- 이후, tx commit 후 update query 를 날려 내용 수정.
+
+
+
+
+결론:
+
+준영속화 상태에서 다시 영속화 상태로 merge 를 통해 하는데
+
+merger 는 새로운 객체를 다시 반환 받아서 영속화 컨텍스트로부터 관리 받는 대상을 만들어준다.
+
+( 즉, 처음에 생성하고 준영속화 상태로 만든 객체는 pk 를 이용해서 새로 영속화한 객체를 받아오는 용도 )
+
+( 파라미터로서 사용 후,  더 이상 사용할 수가 없음 )
+
+

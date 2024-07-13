@@ -1,0 +1,189 @@
+boot_camp 정리 ( 인증과 인가 )
+
+
+
+인증 ( Authentication ): 
+
+- 인증은 해당 유저가 실제 유저인지 인증하는 개념
+
+인가 ( Authorization ):
+
+- 해당 유저가 특정 리소스에 접근이 가능한지 허가를 확인하는 개념 ( 관리자 페이지 권한 등 )
+
+
+
+
+
+* 쿠키-세션 방식의 인증 *
+
+- 1. 사용자 로그인 요청
+
+- 2. 해당 정보를 기반으로 db 로부터 사용자 확인
+
+- 3. 일치하는 회원이라면 세션 생성 및 세션 ID 발급 
+
+	( 서버에서 내부적으로 세션 저장소에서 세션ID 와 객체 관리 )
+
+- 4. 발급된 세션ID 를 사용자에게 응답
+
+- 5. 응답 받은 클라이언트는 쿠키 저장소에 세션ID 를 넣어 관리하고 요청마다 헤더에 함께 요청한다.
+
+- 6. 클라이언트 데이터 요청 ( + 쿠키 )
+
+- 7. 쿠키 검증 ( 서버의 세션 저장소의 세션ID 와 비교 )
+
+- 8. 일치 유무 확인에 따른 세션 획득 ( 유저 정보 획득 )
+
+- 9. 로그인된 유저에 따른 응답
+
+
+
+* JWT 인증 방식 *
+
+- 1. 사용자 로그인 요청
+
+- 2. 해당 정보를 기반으로 db 로부터 사용자 확인
+
+- 3. 일치하는 회원이라면 user 정보를 jwt 로 암호화한다. ( accessToken 발급 )
+
+- 4. 발급한 JWT 를 클라이언트에게 응답 ( body 또는 일반적으로 Header )
+
+- 5. 이후 동일함 ( 똑같이 쿠키에 넣고 있다가 요청하면 쿠키에 있는 jwt 같이 보내고 서버 검증하고... )
+
+
+
+
+세션 방식은 서버의 세션 저장소에 저장하고 관리해야 하는데
+
+JWT 방식은 요청으로 받은 Token 을 서버가 검증만 하면 된다. ( jwt 가 효율적이다. )
+
+
+
+* Cookie Session Test *
+
+- cookie value 는 공백이 불가능해서 Encoding 작업 후, 값을 넣어준다.
+
+
+cookieValue = URLEncoder.encode(cookieValue, "utf-8").replaceAll("\\+", "%20"); 
+
+- utf-8 로 encoding 하고, replaceAll method 부분은 공백을 저렇게 바꾸겠다는 표현식이다.
+
+
+public String getCookie(@CookieValue(AUTHORIZATION_HEADER) String value) 
+
+- parameter 로 cookie 정보를 가져오고 싶다면 @CookieValue( 쿠키이름 ) 을 넣어 value 로 가져온다.
+
+- Cookie cookie = new Cookie(AUTHORIZATION_HEADER, cookieValue); 에서 쿠키이름=AUHTORI..
+
+
+
+
+* HttpSession 사용 *
+
+HttpSession 객체를 사용해서 req.getSession(true) 를 반환 받는다. 
+
+- true 일 때, getSession 에 세션정보 있으면 기존값 그대로 반환, 없다면 새로 생성해서 반환
+
+- false 일 때, getSession 에 세션정보 있으면 기존값 그대로 반환, 없다면 null
+
+session.setAttribute( key, value ) 
+
+- 세션에 저장될 정보를 key - value 형태로 넣어준다.
+
+- client 에서 해당 세션 정보를 받을 때, JSESSIONID 로 쿠키의 이름이 지정되고 
+
+	해당 세션에 넣어준 정보를 encoding 해서 쿠키의 값으로 세팅된다.
+
+session.getAttribute( key ) 
+
+- session 에 저장될 정보로 준 key 값을 getAttribute 에 넣어서 value 값을 꺼내서 확인할 수 있다.
+
+
+
+
+* LoadBalancer *
+
+- 사용자 트래픽이 증가함에 따라 여러 서버로 나뉘어 운영할 때,
+
+	- 사용자의 요청을 분산시켜 트래픽의 안정성을 갖추게 하는 역할을 수행.
+
+	- 각 서버마다 각각 세션을 갖게 되고 Session 마다 다른 Client 정보를 갖게 될 수 있다.
+
+- 만약 로드밸런서가 Client1 의 로그인 정보를 가지고 있지 않은 다른 서버의 세션으로 보내면 문제!
+
+	- 이를 방지하기 위한 방법
+
+	- 1. sticky session : client 마다 요청 Server 고정
+
+	- 2. 세션 저장소 생성하여 모든 세션을 저장
+
+
+다 떄려쳐! JWT 해결!
+
+
+
+
+
+
+* JWT *
+
+- JWT 사용
+
+	- 로그인 정보를 서버가 관리 X , Client 로그인 정보를 JWT 로 암호화하여 저장!
+
+		- 단, 각 서버의 SecretKey 는 모두 동일해야 함. 
+
+		- SecretKey 는 사용자 정보 암호화할 때와 암호화된 Token 을 복호화할 때 사용!
+ 
+
+장점:
+
+	- 1. 동시 트래픽 많을 때, 서버 측 부하 낮춤 ( 서버 자체 검증 )
+
+	- 2. Client , Server 가 다른 도메인을 사용할 떄 ( Ex. 카카오 Oauth2 로그인시 JWT Token 사용 )
+
+단점:
+
+	- 구현의 복잡도 증가
+
+	- JWT 에 담는 내용이 커질수록 네트워크 비용 증가 ( client -> server )
+
+	- 기 생성된 JWT 를 일부만 만료시킬 방법 없다.
+
+	- Secret Key 유출시 JWT 조작 가능
+
+
+
+
+* JWT 사용 흐름 *
+
+- 1. 서버에서 " 로그인 정보 " -> " JWT 암호화 " ( Secret Key 사용 )
+
+- 2. 서버에서 직접 쿠키를 생성해 JWT 를 담아 Client 에게 전달
+
+	- JWT 전달 방법은 개발자가 정함 ( http body , header 등 )
+
+	- 클라이언트의 브라우저 쿠키저장소에 자동으로 JWT 저장 
+
+- 3. 클라이언트에서 서버로 요청마다 쿠키에 포함된 JWT 를 찾아서 요청 
+
+	- 서버는 HttpServletRequest 객체에서 찾아서 사용. 
+	
+	- ( 여러 쿠키가 존재할 수 있으므로 jwt 담을 때 지정했던 이름과 동일한 쿠키를 사용해야 함.
+
+- 4. 서버는 클라이언트로 받은 JWT 토큰을 Secret Key 를 통해 복호화해서 위조 여부 검증
+
+	- jwt 의 만료기간 등을 확인
+
+	- 검증 성공시, 사용자 정보를 가져와 확인 후, 비즈니스 로직 수행
+
+
+
+	
+
+
+
+
+
+
+

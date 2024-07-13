@@ -1,0 +1,104 @@
+boot_camp 정리 ( Spring Data JPA ) 
+
+
+
+
+* Spring Data Jpa *
+
+- JPA 를 쉽게 사용할 수 있게 만들어놓은 하나의 모듈
+
+	- JPA 를 추상화시킨 Repository Interface 를 제공
+
+		- interface 는 하이버네이트 같은 JPA 구현체를 사용해서 구현한 클래스를 사용
+
+
+- JpaRepository Interface 를 구현하는 클래스를 자동으로 생성해준다.
+
+	- 자동 구현된 클래스가 SimpleJpaRepository 이다.
+
+		- Spring 서버 실행시점 JpaRepository interface 를 상속받은 interface 가 자동으로 스캔
+
+		- 해당 interface 정보를 토대로 자동으로 SimpleJpaRepository 클래스 생성, Bean 등록
+
+		- 따라서 Interface 구현 클래스를 직접 작성하지 않아도 JpaRepository 통해 JPA 기능 사용 가능
+
+
+- JpaRepository<"Entity.class", "@Id 의 dataType"> 를 상속받는 Interface 로 선언
+
+	- SimpleJpaRepository 는 @Repository 애노테이션이 존재한다.
+
+		- interface 상속받아서 interface 정의시 해당 annotation 굳이 작성 안해도 된다.
+	
+
+	- 이후 Service 에서 Repository 를 Autowired 를 통해 주입받을 때 구현체가 자동으로 상속된다.
+
+		- Spring 이 Bean 으로 구현체를 등록해줬기 때문이다.
+
+
+
+
+
+* Optional 처리 방법 *
+
+Memo findMemo = memoRepository.findById(id).orElseThrow(() ->
+	new IllegalArgumentException("선택한 메모는 존재하지 않습니다.")
+);
+
+- db 에 값이 존재하면 memo 를 반환
+
+- db 에 값이 존재하지 않으면, 위 예외를 발생시킨다.
+
+
+
+
+
+
+
+
+* Jpa Auditing *
+
+- entity " 생성 날짜 " , " 수정 날짜 " 등을 자동 생성을 위해 사용 ( 편의 기능 )
+
+- 우리가 직접 구현하려면 코드 중복으로 난잡해지는 단점을 해결해준다.
+
+
+사용법:
+
+- Spring boot application level 에 auditing 기능 사용한다고 미리 Annotation 으로 알려야 한다.
+
+	- @EnableJpaAuditing
+
+- Timestamped 추상 클래스를 선언한다.
+
+- @MappedSuperclass	
+
+	- Jpa entity 들이 해당 추상 클래스를 상속할 경우, 추상 클래스의 필드를 column 으로 인식
+
+- @EntityListeners(AuditingEntityListeners.class)
+
+	- 해당 클래스의 Auditing 기능을 활성화 시키는 것 ( 자동으로 created 시간 측정해서 값 넣는 기능 )
+
+- @CreatedDate
+
+	- entity 객체가 생성되어 저장되는 시점, 시간값 자동 저장
+	
+- @Column(updatable = false)
+
+	- 처음 생성 시점에만 값을 세팅하고 그 후, 수정할 수 없게 만드는 애노테이션
+
+- @LastModifiedDate
+
+	- 조회한 Entity 객체를 변경할 때, 변경 시간을 자동으로 수정해서 저장.
+
+- @Temporal 
+
+	- Date , Calendar 같은 날짜 데이터를 매핑할 때 사용
+
+ex)	DATE : 2023-01-01 , 	TIME : 20:21:14 , 		TIMESTAMP : 2023-01-01 20:21:14.999999
+
+
+
+
+결론: 
+
+- Auditing 필수로 남겨서 유용하게 사용해야 한다.
