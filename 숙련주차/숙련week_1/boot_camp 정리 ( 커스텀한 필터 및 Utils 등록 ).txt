@@ -1,0 +1,89 @@
+boot_camp 정리 ( 커스텀한 필터 및 Utils 등록 )
+
+
+
+WebConfig 파일에 등록할 것
+
+
+private final AuthenticationConfiguration authenticationConfiguration;
+
+- AuthenticationConfiguration 을 통해 AuthenticationManager 를 만들기 위해서 받아온다.
+
+- @Bean 으로 Authentication Manager 를 등록해야 하는데 직접 가져올 수 없으므로
+
+	AuthenticationConfiguration.getAuthenticationManager() 를 통해 뽑아서 Bean 으로 등록!
+
+
+JwtAuthenticationFilter 에서의 인증 로직을 생각해보자
+
+- 이 떄, 우리는 attemptAuthentication () 을 수행하여 로그인 시도를 할 때,
+
+	getAuthenticationManager.authenticate 를 통해 클라이언트 요청에서 받아온 
+
+	username 과 password 를 통해 Autentication 객체를 생성해서 인증 로직을 구현했다.
+
+즉,  jwtAuthenticationFilte 를 bean 등록할 때, 우리가 사용한 AuthenticationManager 를 설정해야 한다.
+	
+	< 빈 등록 코드 >
+
+	@Bean
+   	 public JwtAuthenticationFilter jwtAuthenticationFilter() throws Exception {
+        	JwtAuthenticationFilter filter = new JwtAuthenticationFilter(jwtUtil);
+       		 filter.setAuthenticationManager(authenticationManager(authenticationConfiguration));
+      		 return filter;
+         }
+	
+	JwtAuthorizationFilter 는 manager 안쓰니 간단하게 생성자만 만들면 된다.
+
+
+* Bean 으로 등록한 Filter 들을 SecurityFilterChain 안에 넣어야 한다. *
+
+
+모든 필터를 등록하고 설정해서 로그인 시도시 Log 를 찍어 확인해보았다.
+
+
+
+
+Jwt Authorization Filter 동작
+
+Jwt Authentication Filter 동작 - attemptAuthentication 로그인 시도
+
+UserDetailsServiceImp 동작 - Authentication Manager 가 UserDetailsService loadUserByUsername 호출
+
+( loadUserByUsername 은 Authentication Manager 가 넘겨준 username 정보 ( id ) 를 넘겨준다. )
+
+( 넘겨 받은 username(id) 를 확인하여 db 에 사용자가 있는지 확인 후, 있으면 UserDetails 객체 반환 )
+
+( 성공적으로 반환 받고 .. )
+
+JwtAuthenticationFilter 의 successfulAuthentication 메서드 호출 - 로그인 성공 및 JWT 생성
+
+( 성공적으로 인증을 마치고 UserDetails 객체를 반환받았으므로 그 결과를 바탕으로 JWT 토큰 생성 )
+
+( Response 에 JWT 를 담는 로직 수행 )
+
+그 후, 실제 요청인 localhost:8080/ ( main page ) 요청 수행! 
+
+JwtAuthorizationFilter 동작 - token 정보 로그 
+
+( 원래 처음에 Authorization filter 가 동작은 하긴 하는데 토큰 정보 없어서 바로 다음 필터가 수행된 것 )
+
+
+
+
+
+일단 JwtAuthenticationFilter 가 동작해서 로그인 시도를 하면 
+
+UserDetailsServiceImpl 의 loadUserByUsername 를 수행하여 db 에 등록된 사용자인지 인증한다.
+
+Authroization Manager 가 무조건 loadUserByUsername 을 호출해 등록된 사용자인지 확인!
+
+사용자가 맞다면 => JWT 토큰 생성해서 걸고!
+
+사용자가 아니면 => 로그인 실패 처리!
+
+
+
+
+
+

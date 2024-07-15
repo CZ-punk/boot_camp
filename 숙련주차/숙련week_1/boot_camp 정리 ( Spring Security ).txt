@@ -1,0 +1,131 @@
+boot_camp 정리 ( Spring Security )
+
+
+
+
+
+* Spring Security 사용하는 Config 파일을 생성 *
+
+- @Configuration : config 파일로 등록
+
+- @EnableWebSecurity : Spring Security 지원을 가능하게 한다
+
+참고: security 는 formLogin 기반으로 수행한다.
+
+
+
+
+* Config 파일 내부 Spring Security 지원하는 필터를 사용 및 설정 *
+
+http.formLogin((formLogin) ->
+           formLogin
+                   .loginPage("/api/user/login-page")
+                   .loginProcessingUrl("/api/user/login")
+                   .defaultSuccessUrl("/")
+                   .failureUrl("/api/user/login-page?error")
+                   .permitAll()
+        );
+
+- loginPage : 기존에는 security 가 제공하는 default login page 를 사용했는데
+
+		  우리가 만든 login Page 로 경로를 줘서 변경해준다.
+
+- loginProcessingUrl : 로그인 시도시 처리하는 로직이 수행되는 url 을 매핑
+
+- defaultSuccessUrl : 로그인 성공시 url
+
+- failureUrl : 로그인 실패시 url
+
+
+참고:
+
+- formLogin 에 경로를 줬다고 해서 controller 부분까지 와서 메서드를 호출하는 것이 아니다!
+
+- security filter 를 통해 컨트롤러까지 가지 않고 필터부분에서 해결해준다.
+
+
+
+
+* UserDetails 와 UserDetailsService 를 상속받는 각각의 커스텀 구현체 생성 *
+
+- 위 Interface 를 상속받는 시점부터 Security 가 제공하는 default Login 기능을 사용하지 않는다.
+
+
+
+- @AuthenticationPrincipal 
+
+해당 애노테이션을 Controller 메서드의 파라미터로 주면 인가가 필요한 Url 을 요청할 때,
+
+인증 과정을 통해 UserDetails 객체가 생성되고, Authentication 객체의 필드인 Principal 속성에
+
+UserDetails 가 담긴다. 담긴 UserDetails 를 가져와서 로직을 구현할 수 있다.
+
+
+
+- JwtAuthenticationFilter 를 UsernamePasswordAuthenticationFilter 를 상속받아 구현
+
+	- JwtAuthenticationFilter 를 통해 Controller 에서 인증을 했던 부분을 분리할 것
+
+	- 즉, 필터를 통해 인증+인가 부분과 비즈니스 로직 부분을 분리시켜 코드 작성
+
+
+
+
+
+
+
+* UsernamePasswordAuthenticationFilter 로직 흐름 * 
+
+1. 사용자가 로그인 요청을 보냄
+
+2. Spring security 의 UsernamePasswordAuthenticationFilter 가 요청을 가져간다.
+
+3. filter 를 통해 사용자 인증 정보를 추출 ( ID , Password )
+
+4. filter 는 사용자 인증 정보를 통해 UsernamePasswordAuthenticationToken 을 생성한다.
+
+5. 생성된 AuthenticationToken 을 Authentication Manager 에게 위임한다.
+
+6. Authentication Manager 는 AuthenticationToken 을 검증하기 위해 UserDetailsService 를 호출한다.
+
+7. UserDetailsService 에서는 검증된 사용자인지 확인을 위해 DB 를 조회한다.
+
+8. 인증된 사용자가 맞다면 UserDetails 객체를 생성한다. 
+
+	8.1. UserDetails 필드에는 우리가 만든 User 객체를 필드로서 넣어줘서 로직에 사용할 수 있게 구현
+
+9. Authentication Manager 는 UserDetails 객체를 기반으로 Authentication 객체를 생성한다.
+
+	9.1. 생성된 Authentication 객체의 필드인 Principal 필드에 UserDetails 객체가 저장되어 있다.
+
+10. 생성된 Authentication 객체는 SecurityContext 에 저장된다.
+
+11. 위의 인증 절차를 마치면 사용자의 요청을 다시 처리한다. ( 필터를 통과 후, 비즈니스 로직 수행 )
+
+
+참고:
+
+- UserDetailsService 는 UserDetails 객체를 반환하는 loadUserByUsername() 메서드를 오버라이딩 한다.
+
+
+- UserDetailsService 는 Authentication Manager 가 준 Authentication Token 정보를 기반으로 
+
+	인증된 사용자인지 확인하는 과정이고, 
+
+	loadUserByUsername 의 파라미터 값은 사용자가 로그인할 때 입력한 ID 값이 넘어 매핑된다.
+
+
+- Security 가 지원하는 Filter 를 커스텀해서 사용하는 이유:
+
+	- security 가 지원하는 Filter 는 세션 방식을 적용하고 있다.
+
+	- 우리가 커스텀해서 JWT 토큰 방식으로 적용하기 위해서 사용한다.
+
+
+
+- UsernamePasswordAuthenticationFilter 의 setFilterProcessingUrl
+
+	- 원래는 Config 파일에서 로그인 처리 URL 을 설정했는데
+
+	- custom 한 filter 를 적용할 것이기 때문에 커스텀 필터에 로그인 처리 url 설정 
+

@@ -1,0 +1,197 @@
+boot_camp 정리 ( code 분석 )
+
+
+
+* JwtAuthenticationFilter code 분석 *
+
+
+	< 로그인 인증 시도 >
+
+    @Override
+    public Authentication attemptAuthentication
+	(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
+        
+	log.info("로그인 시도");
+        try {
+            LoginRequestDto requestDto = new ObjectMapper().readValue
+								(request.getInputStream(), LoginRequestDto.class);
+
+            return getAuthenticationManager().authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            requestDto.getUsername(),
+                            requestDto.getPassword(),
+                            null
+                    )
+            );
+        } catch (IOException e) {
+            log.error(e.getMessage());
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+- Request 요청 Body 부분에 json 형식으로 username 과 password 가 넘어온다. 
+
+	- request.getInputStream(): request body 부분 가져오는 method
+
+	- 그래서 new ObjectMapper() 를 통해 json 부분을 파싱해서 LoginRequestDto 로 매핑
+
+- getAuthenticationManger 를 통해 manager 를 얻어온다. ( 해당 filter 를 상속받아서 사용 가능 )
+
+	- authenticate() : 인증 처리를 하는 method 
+
+	- authenticate() 의 파라미터로 AuthenticationToken 을 생성해 넣어준다.
+
+	- new UsernamePasswordAuthenticationToken(
+                            requestDto.getUsername(),
+                            requestDto.getPassword(),
+                            null
+                    ) 를 authenticate 의 파라미터로 넣는다. 
+
+		- AuthenticationToken 의 파라미터로  usernmae(id) , password , 권한 순으로 넣어준다.
+
+
+	
+	< 로그인 인증 시도 - 성공시 >
+
+	 @Override
+   	 protected void successfulAuthentication(HttpServletRequest request, 
+								HttpServletResponse response, 
+								FilterChain chain, 
+								Authentication authResult)
+									throws IOException, ServletException {
+
+        	log.info("로그인 성공 및 JWT 생성");
+     		String username = ((UserDetailsImpl) authResult.getPrincipal()).getUsername();
+        	UserRoleEnum role = ((UserDetailsImpl) authResult.getPrincipal()).getUser().getRole();
+
+        	String token = jwtUtil.createToken(username, role);
+        	jwtUtil.addJwtToCookie(token, response);
+    	}
+
+	- attemptAuthentication method 가 성공적으로 반환하면 successfulAuthentication method 수행
+
+		- successfulAuthentication 는 인자로 Authentication 객체를 반환받아 온다.
+
+		- Authentication 내부에 UserDetails 객체에 User 객체를 꺼내 사용 가능하다.
+
+	- 성공하면 JWT 토큰 생성해서 response 에 담아준다.
+
+
+
+	< 로그인 인증 시도 - 실패시 >
+
+	 @Override
+    	protected void unsuccessfulAuthentication
+					(HttpServletRequest request, 
+					HttpServletResponse response, 
+					AuthenticationException failed) 
+								throws IOException, ServletException {
+       	 	log.info("로그인 실패");
+      		  response.setStatus(401);
+ 	   }
+
+	- attemptAuthentication method 가 실패하면 즉, 로그인 시도를 실패하면 해당 메서드 수행
+
+
+
+- UsernamePasswordAuthenticationFilter 를 커스터마이징해서 JWT 토큰을 사용하여 로그인을
+
+인증 및 시도하는 필터를 커스텀하였다. 인증에 대한 부분을 마쳤으니, 
+
+우리가 만든 JWT 토큰을 가지고 웹에 접근하는 로그인된 사용자인지에 대한 
+
+JWT 검증 및 인가에 대한 커스터마이징을 또 구현해야 한다!
+
+
+
+
+* JwtAuthorizationFilter code 분석 *
+
+	< 사용자의 요청에 대해 인가된 사용자인 JWT 검증 >
+
+	@Override
+    protected void doFilterInternal
+			(HttpServletRequest req, HttpServletResponse res, FilterChain filterChain) 
+										throws ServletException, IOException {
+
+	        String tokenValue = jwtUtil.getTokenFromRequest(req);
+
+        	if (StringUtils.hasText(tokenValue)) {
+	           	 // JWT 토큰 substring
+        	    	tokenValue = jwtUtil.substringToken(tokenValue);
+            		log.info(tokenValue);
+
+          		  if (!jwtUtil.validateToken(tokenValue)) {
+            		   	 log.error("Token Error");
+             		  	 return;
+         		   }
+
+        	    	Claims info = jwtUtil.getUserInfoFromToken(tokenValue);
+
+          		  try {
+       			         setAuthentication(info.getSubject());
+       			     } catch (Exception e) {
+       		  		       log.error(e.getMessage());
+         		      		 return;
+          			  }
+      		  }
+
+      		  filterChain.doFilter(req, res);
+   	 }
+	
+	- Request 에서 JWT 를 검증하여 인가된 사용자인지에 대해 검증한다.
+
+	- setAuthentication 메서드를 통해 security context 에 인증객체를 생성해서 담아준다.
+
+	< setAuthentication method >
+
+	public void setAuthentication(String username) {
+     	   SecurityContext context = SecurityContextHolder.createEmptyContext();
+    	    Authentication authentication = createAuthentication(username);
+     	   context.setAuthentication(authentication);
+
+    	    SecurityContextHolder.setContext(context);
+  	  }
+
+
+- 인가된 사용자인지를 판단하여 JWT 검증을 마치면 Security context 에 Authentication 객체를 저장!!
+
+	- createAuthentication method 를 통해 authentication 객체를 생성한다.
+
+	< createAuthentication mehtod >
+
+
+ 	private Authentication createAuthentication(String username) {
+        	UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+        	return new UsernamePasswordAuthenticationToken
+							(userDetails, null,userDetails.getAuthorities());
+    	}
+
+	- userDetailsService.loadUserByUsernmae 메서드를 통해 해당 user 가 존재하는지 db 조회
+
+	- 사용자가 확인되고, 로직이 성공하면 userDetails 객체를 생성하여 
+
+		UsernamePasswordAuthenticationToken ( 얘도 인증객체 ) 를 생성해서 반환
+
+	- 생성된 인증 객체는 security context 에 저장되고 context 는 contextholder 에 담기게 된다.
+
+
+
+
+참고:
+
+- 필터순서는 
+
+SecurityContextPersistenceFilter >> OncePerRequestFilter >> UsernamePasswordAuthenticationFilter 
+
+순으로 진행된다.
+
+이 때, OncePerRequestFilter 를 통해서 인가된 사용자 일 경우, 
+
+UsernamePassword ...FIlter 를 거치지 않고, 바로 인증 처리를 할 수 있다.
+
+
+필터를 커스텀해서 구현하였으니, 이제 등록을 해야한다. ( 파라미터도 매핑해줘야 한다 ) 
+
+일반적으로 config 파일에 작성
+
