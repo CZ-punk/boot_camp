@@ -32,4 +32,5 @@ public class BeanTest {
         System.out.println("test2");
         chicken.eat();
     }
+
 }

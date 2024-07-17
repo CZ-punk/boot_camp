@@ -1,0 +1,65 @@
+boot_camp ( 접근 불가 페이지 만들기 )
+
+
+
+
+* 접근 불가 페이지 *
+
+- 사용자를 특정 API 접근 금지
+
+- 특정 페이지 요청 불가
+
+
+1. 회원 상세정보 ( UserDetailsImpl ) 를 통해 " 권한 (Authority) " 설정 가능
+
+2. 권한 1개 이상 설정 가능
+
+3. " 권한 이름 " 규칙
+
+	a. "ROLE_" 로 시작해야 함
+
+		ex. "ADMIN" 권한 부여 -> "ROLE_ADMIN"
+
+- 권한 생성 및 설정 방법은 구현하고 알고 있기 때문에 생략
+
+
+
+< 권한 제어 방법 >
+
+* Spring Security 이용한 API 별 권한 제어 방법 *
+
+- controller 에 "@Secured" 애노테이션으로 권한 설정 가능
+
+	- @Secured("권한 이름") 선언
+
+		- 권한 1개 이상 설정 가능
+
+
+
+< @Secured 활성화하는 방법 >
+
+- WebSecurityConfig 에 @EnableGlobalMethodSecurity(securedEnabled = true) 를 주면 된다.
+
+- @Secured 애노테이션이 동작해서 권한 체크에서 팅겨지게 되는데
+
+	- 팅겨지면 사용자를 LoginPage 로 리다이렉트 시키게 된다.
+
+- 이 때 우리는 403 오류 페이지를 띄워 접근 불가 페이지란 것을 사용자에게 인지시키고 싶다.
+
+
+
+
+< SecurityFilterChain 을 사용해서 해당 페이지에 대한 Exception 처리 >
+
+        http.exceptionHandling((exceptionHandling) ->
+                exceptionHandling.accessDeniedPage("/forbidden.html"));
+
+	- Spring Security 에서 예외 처리 설정하는 부분
+
+	- accessDeniedPage 메서드는 사용자가 해당 리소스에 대해 권한이 없어 접근 거부 될 때
+
+		보여주는 페이지를 설정하는 것
+
+	- 인자로 들어가는 URL 은 /src/main/resources/static 폴더가 웹 리소스 루트 디렉토리로 사용.
+
+		- 이 때 미리 만들어 둔 forbidden.html 과 연결한 코드이다.

@@ -1,0 +1,44 @@
+boot_camp ( Validation )
+
+
+* Bean Validation *
+
+@NotNull - null 불가
+
+@NotEmpty - null, "" 불가
+
+@NotBlank - null, "" , " " 불가
+
+@Size - 문자 길이 측정
+
+@Max - 최대값
+
+@Min - 최소값
+
+@Positive - 양수
+
+@Negative - 음수
+
+@Email - Email 형식
+
+@Pattern - 정규 표현식
+
+
+- Validation 을 적용한 Dto 에 대해 컨트롤러에 적용시키는 방법
+
+	- ex. 요청을 @RequestBody 부분으로 받는 예제일 때,
+
+	- 파라미터에 @Valid 애노테이션을 적용시켜주면 된다. ( Validation 검증을 적용하겠단 의미 )
+
+	- public ProductRequestDto testValid(@RequestBody @Valid ProductRequestDto requestDto)
+
+
+- @Valid 애노테이션이 붙은 파라미터 바로 뒤의 파라미터로 BindingResult 객체를 파라미터로 받는다.
+
+	- 이는 검증에 대한 오류값들을 관리하는 객체이다.
+
+	- BindingResult 파라미터 앞에 있는 객체에 대해 검증 과정의 오류를 잡는 역할을 한다.
+
+	- BindingResult 의 .getFieldErrors 로 발생한 필드 오류에 대한 정보를 가져올 수 있다.
+
+		- .getDefaultMessage 로 메시지도 출력 가능

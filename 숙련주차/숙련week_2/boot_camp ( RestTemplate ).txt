@@ -1,0 +1,154 @@
+boot_camp ( RestTemplate )
+
+
+
+
+
+- 서버가 클라이언트 측이 되면서 다른 서버의 API 를 요청하기 위한 작업
+
+RestTemplate 는 수동으로 등록해야 한다.
+
+* RestTemplate 등록 방법 *
+
+	private final RestTemplate restTemplate;
+
+    public RestTemplateService(RestTemplateBuilder builder) {
+        this.restTemplate = builder.build();
+    }
+
+	- RestTemplate 를 위와 같은 방식으로 IoC 기법으로 주입을 한다.
+
+
+
+
+* RestTemplate 을 요청할 서버 주소를 생성해 연결하는 방법 *
+	
+    public ItemDto getCallObject(String query) {
+
+        URI uri = UriComponentsBuilder
+                .fromUriString("http://localhost:7070")
+                .path("/api/server/get-call-obj")
+                .queryParam("query", query)
+                .encode()
+                .build()
+                .toUri();
+        log.info("uri = " + uri);
+
+        ResponseEntity<ItemDto> responseEntity = restTemplate.getForEntity(uri, ItemDto.class);
+        log.info("statusCode = " + responseEntity.getStatusCode());
+        
+        return responseEntity.getBody();
+    }
+
+	- UriComponentBuilder 를 통해 
+		
+		- fromUriString : 요청할 서버의 주소
+
+		- path() : 요청할 서버의 EndPotin
+
+		- queryParam() : 요청할 떄의 매개변수 추가
+
+		- encode() : query 매개변수의 인코딩 작업
+
+		- build() : 구성된 URL 을 UriComponents 객체로 빌드
+
+		- toUri() : UriComponents 객체를 Uri 객체로 변환
+
+	- restTemplate.getForEntity(uri, ItemDto.class)
+
+		- get 방식으로 해당 서버의 uri 에 요청을 보내면서 ItemDto 객체로 반환 받는다.
+
+		- 1번째 파라미터 : 요청할 서버에 대한 uri 정보
+
+		- 2번째 파라미터 : Response 로 반환 받을 객체 타입 ( class type ) 
+
+
+
+
+getForEntity 메서드는 응답으로 받은 정보를 Json 형태로 받는데 2번째 파라미터의 형태로
+
+역직렬화해서 받을 수도 있다. 객체 or List 형태도 받을 수 있다. 
+
+But, 강의에서는 String.class 로 받아서 해당 List 형태의 json 을 
+
+JSONObject , JSONArray 객체를 거쳐 List<ItemDto> 객체로 변환하는 작업을 수행할 것이다.
+
+* 변환 로직 *
+
+	public List<ItemDto> fromJSONtoItems(String responseEntity) throws JSONException {
+        	JSONObject jsonObject = new JSONObject(responseEntity);
+	        JSONArray items  = jsonObject.getJSONArray("items");
+        	List<ItemDto> itemDtoList = new ArrayList<>();
+
+	        for (Object item : items) {
+        	    ItemDto itemDto = new ItemDto((JSONObject) item);
+	            itemDtoList.add(itemDto);
+	        }
+
+	        return itemDtoList;
+	    }
+
+	- JSON 데이터를 쉽게 다루기 위해서 JSON 라이브러리를 추가하고
+
+	 responseEntity 를 인자로 넣어 JSONObject 객체를 생성한다.
+
+	( 이때, ResponseEntity 는 응답으로 받아온 String type 의 json 형태 데이터이다. )
+
+	- jsonObject.getJSONArray(name)
+
+		- json 형태로 넘어온 값의 제일 최상단의 Key 값을 파라미터로 준다.
+
+		- key 형태로부터 중간 및 하위의 Json 배열 타입을 반환 받는다.
+
+	- JSONArray 객체에서 iterator 를 돌려 Object 객체를 하나씩 추출해서 
+
+	ItemDto 객체로 변환해 List 형태로 만들면 된다.
+
+	public ItemDto(JSONObject itemJson) throws JSONException {
+     	   	this.title = itemJson.getString("title");
+        	this.price = itemJson.getInt("price");
+	    }
+
+	- 해당 생성자를 사용해서 JSONObject 데이터를 추출해 생성한다.
+
+
+	getForEntity 를 String.class 로 받으면 body 부분
+
+	{
+		"items":
+		[
+		{
+			"title":"Mac",
+			"price":3888000
+		},
+		{
+			"title":"iPad",
+			"price":1230000
+		},
+		{
+			"title":"iPhone",
+			"price":1550000
+		},
+		{
+			"title":"Watch",
+			"price":450000
+		},
+		{
+			"title":"AirPods",
+			"price":350000
+		}
+		]
+	}
+
+			
+참고:
+
+- List 형태를 dto 로 보낼 때
+
+	- List 형태의 Dto 를 만들지 않고, ResponseDto 의 필드로 List 형태를 만들어
+
+		값을 넣어 보내는 방법도 있다. ( 좋다 )
+
+- List type 으로 넘어오면 Json 타입을 다루기 애매함으로 
+
+	Json 라이브러리를 사용해서 쉽게 List<Dto> 형태로 만드는 작업을 수행
