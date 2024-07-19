@@ -1,0 +1,51 @@
+boot_camp ( 고아 객체 )
+
+
+
+
+* Orphan *
+
+Test code 에서 db 의 User 와 함께 연관관계가 있는 Food Entity 들을 조회하고 
+
+User 의 필드에 존재하는 FoodList 중 1개를 삭제하고 로직을 종료하면 db 에 반영되지 않는다.
+
+
+- db 로부터 조회한 Entity 의 연관관계가 있는 Entity 필드를 삭제하면 DB 까지 반영되게 하고 싶다!
+
+>>>> JPA 에서 지원하는 OrphanRemoval 옵션을 사용해서 처리 가능하다.
+
+
+해당 Entity Type 필드의 연관관계 애노테이션에 orphanRemoval = true 옵션을 적용하면 된다.
+
+
+- orphanRemoval 옵션도 CascadeType.REMOVE 과 마찬가지로
+
+해당 User Entity 를 삭제하면 자동으로 연관된 Food Entity 함께 삭제한다.
+
+즉, orphanRemoval 는 연관된 Entity Type 을 제거했을 때 + CascadeType.REMOVE 기능을 하고 있다.
+
+
+주의할 점:
+
+- CascadeType.REMOVE 옵션 || orphanRemoval 옵션을 사용하려고 할 때,
+
+삭제하려고 하는 Entity 가 다른 곳에서도 참조하고 있는지/아닌지를 꼭 확인해야 한다.
+
+그러므로 해당 옵션들은  @ManyToOne 에서는 사용 불가능하다.
+
+
+ex) 한 사람이 여러개의 주문할 수 있는 관계인 Orders 와 Users 는 N:1 관계라고 할 때,
+
+	- 양방향 관계라고 가정한다면,
+
+	- Users Entity 는 List Orders type 필드를 가진 @OneToMany 관계의 필드가 되고,
+
+	- Orders Entity 는 User type 필드를 가진 @ManyToOne 관계의 필드가 된다.
+
+이 때, Orders Entity 의 @ManyToOne 관계인 user type 필드에 위의 orphanRemoval 를 적용 가능하면,
+
+만약 어떤 orders entity 를 삭제하게 되면 연관관계가 있는 User 도 삭제가 된다. 
+
+이로 인해 삭제된 User 가 여러 Orders Entity 를 참조하고 있는 상황이라면 
+
+기존 삭제된 user 가 참조하고 있던 다른 Orders Entity 들은 관계 끊어지고 병신으로 남는 data 가 된다.
