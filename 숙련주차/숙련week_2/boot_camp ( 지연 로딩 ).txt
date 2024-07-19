@@ -26,8 +26,10 @@ Setting
 
 
 
-* 영속성 컨텍스트와 지연 로딩의 관계 *
 
+
+
+* 영속성 컨텍스트와 지연 로딩의 관계 *
 
 - 지연로딩도 영속성 컨텍스트에 포함되는 기능이다.
 
@@ -36,3 +38,36 @@ Setting
 		- 즉, Transaction 환경이어야 한다. ( Spring container 환경 ) 
 
 		- select 할 때가 아닌 " 지연 로딩 " 을 할 때
+
+
+
+
+
+* 영속성 전이 *
+
+- 만약, Users Entity 를 저장할 때 User 와 연관관계가 있는 Food 에 대해서 동시 저장하고 싶을 경우
+
+( user 만 save 했을 때, 연관관계가 있는 food 들에 한해 동시에 insert query 가 나가게 하고 싶다 )
+
+save 여러번 귀찮아서! >>>> Cascade 를 사용해서 해결할 수 있다.  
+
+SQL 에서 지원하는 것을 구현체 hibernate 를 통해 JPA 에서 해당 기능을 편리하게 지원한다. 
+
+
+- 영속 상태의 Entity 에서 수행되는 작업들이 연관된 Entity 들에게까지 전파되는 상황
+
+자동으로 저장하려고 하는 연관된 Entity 의 추가한 연관관계 애노테이션에 Cascade 옵션 설정
+
+즉, User 를 저장할 때, Food entity 도 함께 저장하고 싶은 경우
+
+
+< User entity code >
+
+   @OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST)
+    private List<Food> foodList = new ArrayList<>();
+
+CascadeType.PERSIST 옵션을 걸어서 User 를 저장할 때, 
+
+	- 해당 User entity 에 대한 필드인 foodList 에 food 를 추가하여 user 를 save 할 때,
+
+		추가한 food 들에 대해서도 함께 영속화되어 save 수행된다.
