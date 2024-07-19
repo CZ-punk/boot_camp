@@ -25,6 +25,10 @@ User 의 필드에 존재하는 FoodList 중 1개를 삭제하고 로직을 종�
 즉, orphanRemoval 는 연관된 Entity Type 을 제거했을 때 + CascadeType.REMOVE 기능을 하고 있다.
 
 
+
+
+
+
 주의할 점:
 
 - CascadeType.REMOVE 옵션 || orphanRemoval 옵션을 사용하려고 할 때,
