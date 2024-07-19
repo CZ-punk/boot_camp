@@ -83,6 +83,8 @@ FK 를 갖는 주인 테이블을 JPA 가 인지할 수 없게 되고 내부적�
 ( 의도치 않은 중간 테이블 설계 문제 발생 )
 
 
+
+
 추가:
 
 - Trasaction 과 영속성 컨텍스트 생명주기 동일 ( Tx 환경에서 영속성 컨텍스트 기능 사용 가능 )
@@ -100,4 +102,98 @@ FK 를 갖는 주인 테이블을 JPA 가 인지할 수 없게 되고 내부적�
 		- tx 환경이 아닐 경우, 오류가 나기전 insert 를 수행했던 entity 들은 저장되어 db 꼬인다.
 
 			- 물론 상황에 따라 다르다. 
+
+
+
+
+* 1:N 관계 *
+
+- Food Entity 와 User Entity 간의 관계에서 Food 가 FK 주인이지만, 1:N 관계 ( Food -> User 단방향 )
+
+즉, FK 의 주인은 원래 Food 지만, FK 를 User 가 가지고 있을 경우이다.
+
+	- 고객의 Entity 에는 Food entity 의 필드는 없지만, db column FK 로서 Food 가 존재한다.
+
+	- Food Entity 에는 List <User> 가 존재한다. ( Food -> User 로 단방향 조회를 하기 때문 )
+
+- 현재 상황에서는 user table 에 food 를 fk 로서 가져야 하므로 
+
+	- 구조상 Food Entity 를 @OneToMany 로 @JoinColumn 의 name 을 food_id 로 user table 저장
+
+
+즉, FK 의 주인은 Food 지만, db table 에는 User 에게 FK 만 맡기고 Entity 에서의 관리는 Food 가 한다!
+
++
+
+1:N 관계에서 양방향 매핑은 JPA 에서 지원하지 않는다. ( 억지 표현은 가능 )
+
+- 각각 @JoinColumn 으로 참조할 수는 있다.
+
+- 대신 FK 의 주인이 아닌 쪽에서는 fk 에 대해 controll 불가능
+
+	- joinColumn option 으로 insertable , updatable = false 로 주어 읽기전용 표현 가능
+
+
+실행해보면  User 를 먼저 세팅하고 food 를 저장하고 다시 User 와 Food 관계를 매핑하면서 
+
+User table 에 Food entity 에 대한 FK 를 세팅하는데 추가적인 Update Query 가 발생하면서 성능 저하
+
+	-	-	-	-추천하지 않는 방법이다.	-	-	-
+
+
+
+
+
+
+* N:M 관계 *
+
+- N:M 관계는 중간 테이블을 생성해 풀어서 사용해야 한다.
+
+다대다 관계에서 FK 주인이 Food 인 상황,
+
+- @JoinTable 애노테이션을 사용해서 중간테이블을 편리하게 생성 가능하다.
+
+	- 옵션으로는 name = "테이블 명", 
+
+	- JoinColumns = @JoinColumn(name = "food_id") : 현재 위치인 Food Entity 의 pk column
+
+	- inverseJoinColumns = @JoinColumn(name = "user_id") : 반대 위치인 User Entity 의 pk column
+
+
+즉, 새로 생성할 중간 테이블을 food table column "food_id" 와 User table column 인 "user_id" 를
+
+매핑해서 중간 테이블을 설계한다. ( 중간 테이블은 FK 만 2개 )
+
+=> JPA 에서 만들어 준 중간테이블은 조작하기에 불편하다. 
+
+
+불편한 이유:
+
+	- PK 없음 , 우리가 직접 생성한게 아니라 추가 변경사항 발생시 관리 힘듦
+
+	- 중간 테이블을 직접 만들어서 사용해보자!
+
+
+
+* Orders 중간 테이블 생성 및 구현 *
+
+- 일반적으로 FK 의 주인이 FK 를 가지고 있으며, Many(다) 인 부분이 FK 를 가지고 주인이 된다.
+
+Food 와 User 의 관계에서 다대다 관계이므로 해당 관계를 중간 테이블 Orders 를 두어
+
+Food 와 Orders 를 1:N 관계, ( 하나의 Food 는 여러번 주문될 수 있음 )
+
+User 와 Orders 를 1:N 관계, ( 한명의 User 는 주문을 여러번 할 수 있음 )
+
+
+만약, Food Table 에서 Order 를 거쳐 User 를 조회할 이유가 없다면
+
+- user entity 부분에 양방향으로 매핑할 이유가 없음 ( 반대도 마찬가지 )
+
+강의에서는 중간 테이블을 거쳐 서로의 Entity 를 조회할 수 있도록 코드 구성되어 있다. ( 양방향 매핑 )
+
+
+중요!
+
+- db 에 연관관계로 매핑된 데이터를 조작하기 위해서는 FK 가 존재하는 entity 의 정보를 수정해야 한다.
 
