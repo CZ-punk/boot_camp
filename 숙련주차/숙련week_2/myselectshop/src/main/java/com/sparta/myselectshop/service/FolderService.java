@@ -18,7 +18,7 @@ public class FolderService {
     private final FolderRepository folderRepository;
     public void addFolders(List<String> folderNames, User user) {
 
-        List<Folder> existFolderList = folderRepository.findAllByUserAndNameIn(user.getUsername(), folderNames);
+        List<Folder> existFolderList = folderRepository.findAllByUserAndNameIn(user, folderNames);
         // 조건1: 해당 user 와 연관관계가 있는 모든 Folder 필터링
         // 조건2: folderNames 와 일치하는 folder.name 인 모든 Folder 를 필터링
 
