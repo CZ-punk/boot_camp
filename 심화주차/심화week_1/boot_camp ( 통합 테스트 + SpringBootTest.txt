@@ -1,0 +1,47 @@
+boot_camp ( 통합 테스트 + @SpringBootTest )
+
+
+
+
+여러 컴포넌트를 연결해 실제 애플리케이션이 돌아가는 것처럼 IoC , DI 기능을 사용한 테스트! 
+
+
+
+
+
+* Annotation *
+
+
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT) 
+
+- SpringBoot 환경에서 Test 를 진행 ( IoC , DI 환경 ) 
+
+- 옵션 webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT : 서버 Port random 으로 설정 옵션
+
+
+
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+
+- Test Class 의 필드들을 선언하고 사용할 때, 각각의 테스트는 독립적으로 수행되기 때문에
+
+그렇기 때문에 선언된 필드는 공유되지 않고, 각각의 메서드 단위에 할당되어 돌아간다. ( 통합 테스트 불가 )
+
+- 이 때, 통합 테스트에서는 각각의 필드를 공유해서 통합적으로 테스트를 진행하기 위해서는
+
+위 애노테이션인 @TestInstance 를 선언 후, 옵션으로 TestInstance.Lifecycle.PER_CLASS 를 주면
+
+Test Instance 의 생성을 클래스 단위로 변경하게 함으로서 해당 Test class 에 존재하는 필드들을
+
+모든 Method 가 공유하며 사용할 수 있게 된다. ( 통합 테스트 가능 환경!! )
+
+
+
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+
+- method 순서 지정 
+
+
+
+
+
+
