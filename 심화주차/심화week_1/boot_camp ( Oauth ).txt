@@ -1,0 +1,81 @@
+boot_camp ( Oauth )
+
+
+
+* Oauth *
+
+- 인터넷 사용자들이 비밀번호를 제공하지 않고 다른 웹사이트 상의 자신들의 정보에 대해
+
+웹사이트 또는, 애플리케이션의 접근 권한을 부여할 수 있는 공통적 수단으로 사용되는,
+
+접근 위임을 위한 개방형 표준
+
+
+- 사용자가 애플리케이션에게 모든 권한을 넘기지 않고, 사용자 대신 서비스를 이용할 수 있게 해주는
+
+HTTP 기반의 보안 프로토콜
+
+
+
+
+* RestTemplate *
+
+- 기본적으로 Spring boot 는 RestTemplate 를 Builder 를 통해서 Bean 으로 등록 유도
+
+- 기존 방법: 생성자 주입을 통한 Builder 로 Bean 등록
+
+- 수동 등록 방법:	Config 파일 내부에 등록 ( 강의 참고 )
+
+
+	@Bean
+   	public RestTemplate restTemplate(RestTemplateBuilder restTemplateBuilder) {
+
+        	return restTemplateBuilder
+               		.setConnectTimeout(Duration.ofSeconds(5)) // 5초
+               		.setReadTimeout(Duration.ofSeconds(5)) // 5초
+              		.build();
+  	  }
+
+- Config 파일을 통해 위와 같은 메서드로 Bean 으로 등록 가능하다.
+
+- setConnectTimeout(Duration.ofseconds(5) & setReadTimeout(Duration.ofSeconds(5) : 
+
+	- 외부 API 호출 시 일정 시간이 지나도 응답 없을 때, 무한 대기 상태 방지를 위해 강제 종료 설정
+
+
+KakaoService 의 restTemplate 에서는 수동으로 등록한 Bean 을 사용하면서
+
+위의 추가적인 설정을 포함해 동작하도록 설계되었다.
+
+
+
+
+
+* Kakao Oauth *
+
+- 카카오로 부터 Oauth2 로그인 즉, 소셜로그인을 진행할 경우
+
+	- Kakao Developer 에서 설정했던 Redirect Page 를 통해 "인증 코드" 인 code 를 RequestParam 형태로 받는다.
+
+	- code 를 올바르게 받아와서 해당 로그인에 대해 Jwt 토큰을 생성해서 연결을 유지시켜주기 위해서 JWT 생성
+
+	- 또한, 받아온 인증 code 를 통해 추가적인 토큰을 Kakao Server 에다가 요청
+
+	- 요청으로 받아온 token 으로 Kakao API 를 호출해서 정보를 받아올 것 ( nickname, email 정보 등등 )
+
+
+
+
+* ObjectMapper *
+
+- 객체를 Json , Json을 객체 변환을 도와주는 객체
+
+- readTree( Json형식의 String type 데이터 ) :
+
+	- 해당 메서드는 파라미터에 있는 데이터를 JsonNode 객체로 파싱해준다.
+
+	- 파싱된 데이터인 JsonNode 의 get() 을 통해 Key 값을 파라미터로 넣어주면 매핑되는 value 를 꺼내준다.
+
+	- 이 때, get 으로 꺼내고 .asText 메서드를 통해 String 으로 변환해주어 사용할 수 있다.
+
+
