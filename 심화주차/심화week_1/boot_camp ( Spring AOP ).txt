@@ -1,0 +1,165 @@
+boot_camp ( Spring AOP )
+
+
+
+
+만약, MySelectShop 을 가장 많이 사용한 Top5 회원들을 찾아 선물 증정할 경우,
+
+어떤 기준으로 Top5 회원을 선정할 것인가?  < 서버 사용시간 > 으로 선정하기로 했다.
+
+
+- 서버 사용시간: 모든 API 수행시간의 총합
+
+	- 시간 측정 방법: Controller 에 응답이 나간 시간 - Controller 에 요청이 들어온 시간
+
+
+
+
+* Scratch file *
+
+- 프로젝트와 상관없이 특정 Method 또는 code 를 수행시켜보고 싶을 때 사용
+
+
+
+
+
+* 실제 구현 *
+
+- try { } catch { } finally { } 를 통해 구현 가능
+
+	- try 에서 로직 수행 후, return 하면 finally 호출되면서 endtime - starttime 계산 후, 
+
+	- ApiUseTime 객체의 useTime 필드에 값을 + 해주면 된다. ( 당연히 User 와 1:1 연관관계 매핑 )
+
+
+
+
+* 부가기능 모듈화의 필요성 *
+
+- 내부적으로 서버가 추적해서 로직이 돌아가기 때문에, User 들은 인지할 수 없다.
+
+- 핵심기능: 각 API 별 수행해야 할 비즈니스 로직
+
+	- ex) 상품 키워드 검색, 관심상품 등록, 회원가입, 관심상품 폴더 추가, ... 
+
+- 부가기능: 핵심기능을 보조하는 기능
+
+	- ex) 회원 패턴 분석을 위한 로그 기록, API 수행시간 저장, ...
+
+
+- 문제점:
+
+	- 모든 핵심기능에 부가 기능을 추가하려면... 100개면 100개를 추가해야 하는 문제.. 발생
+
+	- 핵심기능이 나중에 추가될 때... 부가기능 추가 고려해서 로직 구현... ㅠㅠ
+
+	- 부가기능 깜빡했을 경우 ㅋㅋ
+
+>>>> 부가기능을 모듈화 해서 해결!!
+
+
+
+
+
+* AOP ( Aspect Oriented Programming ) 을 통해 부가 기능 모듈화 *
+
+- 핵심 , 부가기능을 분리해서 설계 및 구현
+
+- 분리 구현한 핵심 , 부가기능을 Spring AOP 를 통해 합쳐서 사용 가능
+
+
+Advice: 부가기능을 핵심 기능의 언제 수행할 지 결정하는 방법
+
+( 핵심기능의 수행 전, 후, 전&후 전부, 핵심기능이 반환한 값을 사용할 여부, 예외 발생시 수행 여부 )
+
+
+PointCut: 부가기능을 핵심기능의 어디에 적용할 지에 대한 위치
+
+***** 언제(Advice) , 어떤 부분(PointCut) 에서 수행할지 결정해야 한다. *****
+
+
+
+
+* Aop Annotation *
+
+- @Aspect : Aop 설정을 할 class level 선언
+
+- Advice 종류
+
+	- @Around : 핵심기능 수행 전과 후 ( @Before + @After )
+
+	- @Before : 핵심기능 수행 전 ( ex. Client 입력값 Validation 수행 )
+
+	- @After : 핵심기능 수행 성공/실패 여부와 상관없이 동작 ( try catch 의 finally() 처럼 동작 )
+
+	- @AfterReturning : 핵심기능 호출 성공 시 ( method return 값 사용 가능 )
+
+	- @AfterThrowing : 핵심기능 호출 실패 시 ( 즉, Exception 발생 경우만 동작, ex. 예외 발생시 개발자 알림 )
+
+- PointCut 
+
+	- PointCut 은 특정 표현 방법이 존재한다.
+	
+	- PointCut Expression 형태
+
+		- @AdviceAnnotation ( Point Cut 표현 ~~ ) 형식인데
+
+		1. public || private || *
+
+		2. void, String, List<String>, ...
+
+		3. class명 ( 패키지명 필요 )
+
+			- ex. com.sparta.myselectshop.controller.* : controller 패키지의 모든 클래스에 적용
+
+			- ex. com.sparta.myselectshop.controller.. : controller 패키지 및 하위 패키지 모든 클래스 적용
+
+		4. function 명 
+
+			- addFolders : addFolders() 메서드만 적용
+
+			- add* : add 로 시작하는 모든 메서드 적용
+
+		5. 파라미터 패턴
+
+			- ex. (com.sparta.myselectshop.dto.FolderRequestDto) : FolderRequestDto 인수만 허용
+
+			- ex. () : 인수 없음
+
+			- ex. (*) : 인수 1개 ( Type 상관없음 )
+
+			- ex. (..) : 인수 0~N 개 ( Type 상관없음 )
+
+
+		- Point Cut 재사용 가능
+
+		- Point Cut 결합 가능
+
+
+	- 위에서 말한 것처럼 @AdviceAnnotation 종류에 Point Cut 을 붙일 수도 있지만,
+
+	@Pointcut 애노테이션을 사용해서 표현 가능하다.
+
+
+
+<<<<<<<<<	이거 Notion 봐라 존나 많고, 어렵고, 힘들다.	>>>>>>>>>>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
