@@ -85,7 +85,6 @@ public class KakaoService {
                 requestEntity,
                 String.class
         );
-        log.info("Kakao.getToken() response: {}\n{}", response.getBody(), response);
 
         // HTTP 응답 (JSON) -> 액세스 토큰 파싱
         JsonNode jsonNode = new ObjectMapper().readTree(response.getBody());
