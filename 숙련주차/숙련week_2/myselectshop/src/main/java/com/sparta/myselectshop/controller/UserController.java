@@ -82,7 +82,7 @@ public class UserController {
         String token = kakaoService.kakaoLogin(code);
 
         // Cookie Setting
-        Cookie cookie = new Cookie(JwtUtil.AUTHORIZATION_HEADER, token);
+        Cookie cookie = new Cookie(JwtUtil.AUTHORIZATION_HEADER, token.substring(7));
         cookie.setPath("/");
         response.addCookie(cookie);
 

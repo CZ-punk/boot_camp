@@ -18,6 +18,8 @@ HTTP 기반의 보안 프로토콜
 
 
 
+
+
 * RestTemplate *
 
 - 기본적으로 Spring boot 는 RestTemplate 를 Builder 를 통해서 Bean 으로 등록 유도
@@ -64,6 +66,13 @@ KakaoService 의 restTemplate 에서는 수동으로 등록한 Bean 을 사용�
 	- 요청으로 받아온 token 으로 Kakao API 를 호출해서 정보를 받아올 것 ( nickname, email 정보 등등 )
 
 
+redirectUrl 에서 code 를 받는다고 로그인이 된 것이 아닌,
+
+code 를 다시 Kakao Server 에 요청 후, access_token 을 받아와야 로그인이 성공.
+
+
+
+
 
 
 * ObjectMapper *
@@ -78,4 +87,41 @@ KakaoService 의 restTemplate 에서는 수동으로 등록한 Bean 을 사용�
 
 	- 이 때, get 으로 꺼내고 .asText 메서드를 통해 String 으로 변환해주어 사용할 수 있다.
 
+
+
+
+
+* 소셜로그인 Oauth2 카카오 동작 흐름 *
+
+- client 에서 kakao 소셜로그인을 springboot server 에 요청
+
+- springboot server 는 client 요청 정보를 토대로 Kakao Server 에 인증 코드 요청
+
+- 받아온 인증 코드 통해 다시 Kakao Server 요청하여, AccessToken 을 반환 받음. ( code 유효성 검사, login 성공 )
+
+
+- Springboot Server 에서 로그인 성공한 kakao 소셜 로그인 유저가 처음인지 아닌지에 따라 회원가입 여부 결정
+
+	- 처음 로그인한 User 인 경우, 추가적인 로직 필요 ( 즉, db 에 해당 User 없을 때 ):
+
+		- db 에 새로운 entity 를 생성하여 정보 저장
+
+		- user 정보를 토대로 jwt 토큰을 생성하며 반환 ( cookie 로 전달 )
+
+	- 기존 로그인했던 User 일 경우:
+
+		- db 로부터 조회된 User 를 반환
+
+		- 조회한 User 정보를 토대로 jwt 토큰을 생성하며 반환 ( cookie 로 전달 )
+
+
+++ 참고:
+
+- 강의에서는 Email 속성이 Not Null , Unique 제약 조건이 걸려있다.
+
+- 그러므로, 우리는 kakao Soical Login 진행시에 신규 유저라도, 
+
+	- 기존에 db 에 존재하는 일반회원의 email 필드와 , Kakao Api 를 통해 받아온 email 정보가 동일하면
+
+	 같은 User 로 로직을 처리하여 비즈니스 로직을 수행한다.
 
