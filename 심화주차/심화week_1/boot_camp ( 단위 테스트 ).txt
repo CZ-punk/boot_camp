@@ -53,4 +53,7 @@ boot_camp ( 단위테스트 )
 		- 참고로, 파라미터로 준 갯수만큼 반복 수행한다.
 
 		- ex )  void parameterTest(int num) { ... }
+
+
+	- 검증 할 때는 Assertion 객체를 사용해서 처리 ( 갓영한 )
 	
