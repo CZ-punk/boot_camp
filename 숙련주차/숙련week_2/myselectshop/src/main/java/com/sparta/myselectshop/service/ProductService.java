@@ -36,7 +36,7 @@ public class ProductService {
     public ProductResponseDto updateProduct(Long id, ProductMypriceRequestDto requestDto) {
         int myprice = requestDto.getMyprice();
         if (myprice < 100)
-            throw new IllegalArgumentException("유효하지 않은 안심 가격입니다. 최소 " + MIN_MY_PRICE + "원 이상으로 설정해 주세요.");
+            throw new IllegalArgumentException("유효하지 않은 관심 가격입니다. 최소 " + MIN_MY_PRICE + "원 이상으로 설정해 주세요.");
 
         Product product = productRepository.findById(id).orElseThrow(() ->
                 new NullPointerException("해당 상품을 찾을 수 없습니다."));
@@ -75,7 +75,7 @@ public class ProductService {
     }
 
     public void addFolder(Long productId, Long folderId, User user) {
-        
+
         Product product = productRepository.findById(productId).orElseThrow(
                 () -> new NullPointerException("해당 상품이 존재하지 않습니다."));
 
@@ -89,8 +89,12 @@ public class ProductService {
         // 중복확인
         productFolderRepository.findByProductAndFolder(product, folder)
                 .ifPresentOrElse(
-                        productFolder -> { throw new IllegalArgumentException("해당 폴더에 대해 이미 존재하는 상품입니다."); },
-                        () -> { productFolderRepository.save(new ProductFolder(product, folder)); }
+                        productFolder -> {
+                            throw new IllegalArgumentException("해당 폴더에 대해 이미 존재하는 상품입니다.");
+                        },
+                        () -> {
+                            productFolderRepository.save(new ProductFolder(product, folder));
+                        }
                 );
     }
 
