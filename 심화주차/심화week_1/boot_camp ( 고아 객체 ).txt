@@ -1,1 +1,25 @@
 boot_camp ( 단위테스트 )
+
+
+
+
+* 단위테스트 ( feat.Junit5 ) *
+
+
+- Test Code Annotation
+
+	- @BeforeEach: 각각의 테스트 코드가 수행되기 전에 수행
+
+	- @AfterEach: 각각의 테스트 코드가 수행된 후에 수행
+
+	- @BeforeAll: 모든 테스트 코드가 수행되기 전에 최초로 수행
+
+	- @AfterAll: 모든 테스트 코드가 수행된 후에 마지막으로 수행
+
+	- @DisplayName: 테스트의 내용을 한눈에 알아볼 수 있게 네이밍 해줄 때 사용
+
+	- @Nested: 테스트 코드에서 내부 클래스를 정의해서 사용할 수 있다. ( group 단위 파악 )
+
+	- @TestMethodOrder(MethodOrderer.OrderAnnotation.class) 를 class 단위에 선언
+
+		- @Order(number) annotaion 을 통해 테스트 코드의 순서를 지정하여 수행 가능
