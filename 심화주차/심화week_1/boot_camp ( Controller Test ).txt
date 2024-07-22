@@ -1,0 +1,147 @@
+boot_camp ( Controller Test )
+
+
+
+
+SpringSecurity 와 함께 사용 중이라 Test 까다로움
+
+Test code . MockSpringSecurityFilter implements Filter 생성
+
+- doFilter 부분에 SecurityContext 에 가짜 인증 객체를 넣어서 인증됐다는 가정하에 수행 가능
+
+
+
+
+* Controller Test Code *
+
+@WebMvcTest(
+        controllers = {UserController.class, ProductController.class},
+        excludeFilters = {
+                @ComponentScan.Filter(
+                        type = FilterType.ASSIGNABLE_TYPE,
+                        classes = WebSecurityConfig.class
+                )
+        }
+)
+
+- @WebMvcTest 애노테이션 선언
+
+	- 옵션 controllers = {} : 사용할 Controller class 를 명시
+
+	- 옵션 excludeFilters = {} : 제외할 FIlter 를 명시
+
+		- 내부 옵션 @ComponentScan.Filter( type = ... , classes = ... )
+
+			- 컴포넌트 스캔할 필터 중 제외할 필터를 위와 같은 방식으로 지정해서 제외
+
+- MockMvc mvc , Principal mockPrincipal 생성해서 가짜 mvc , 인증 객체 생성
+
+mvc setting 
+
+	@BeforeEach
+   	public void setup() {
+        	mvc = MockMvcBuilders.webAppContextSetup(context)
+                	.apply(springSecurity(new MockSpringSecurityFilter()))
+	                .build();
+    	}
+
+- 가짜 mvc 를 적용하기 위해 webAppContext 에 우리가 만든 가짜 securityFilter 를 적용하기 위해
+
+	apply(springSecurity( 가짜필터 )) 를 설정하여 build 하면 된다.
+
+
+- 인증 객체 생성 
+
+	- 원래는 controller 에서 @AuthenticationPrincipal 을 통해 userDetails 객체를 받아왔다.
+
+    private void mockUserSetup() {
+        // Mock 테스트 유져 생성
+        String username = "sollertia4351";
+        String password = "robbie1234";
+        String email = "sollertia@sparta.com";
+        UserRoleEnum role = UserRoleEnum.USER;
+        User testUser = new User(username, password, email, role);
+        UserDetailsImpl testUserDetails = new UserDetailsImpl(testUser);
+        mockPrincipal = 
+	new UsernamePasswordAuthenticationToken(testUserDetails, "", testUserDetails.getAuthorities());
+    }
+    
+	- 위 method 를 통해 해당 부분을 test code 로 구현하였다.
+
+
+기본적인 설정은 끝났고, 실제 controller test code 를 확인하겠다.
+
+
+* login Page *
+
+    @Test
+    @DisplayName("로그인 Page")
+    void test1() throws Exception {
+        // when - then
+        mvc.perform(get("/api/user/login-page"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("login"))
+                .andDo(print());
+    }
+
+	- mvc.perform()
+
+		- get( url ) : 해당 url 로 get 요청을 보낸다.
+
+		- andExpect(status().isOk()) : 응답으로 예상되는 http status 값을 isOk ( 200 ) 으로 설정
+
+		- andExpect(view().name("login") : 응답으로 예상되는 반환할 html 파일의 이름을 설정
+
+		- andDo(print()) : 반환되는 html 을 출력
+
+< 강의에서는 오류가 발생하였는데 이유는 @EnablerJpaAuditing application level 에 걸어서 문제가 발생 >
+
+< 즉, user setting 에 대해 jpa 문제 발생 >
+
+< Controller Test 이고, Jpa 기능을 테스트 하지 않기 때문에, config 파일을 따로 만들어 문제가 발생하는 
+
+annotation 을 따로 만든 config 파일에 걸어준다. >
+
+
+
+* 신규 관심상품 등록 *
+
+- mockPrincipal 을 미리 만들어둔 mockUserSetup() 을 통해 설정
+
+- ProductRequestDto 객체를 임의 값을 넣어 생성
+
+- String postInfo = objectMapper.writeValueAsString(requestDto);
+
+	- post 요청을 통해 ProductRequestDto 객체 정보를 Json 형태로 줘야한다.
+
+	- <<<<< Server 는 Json 을 읽을 수 없다. >>>>>>>
+
+		- ObjectMapper.writeValueAsString( 객체 ) 를 통해 객체를 Json 형태의 String Type 으로 변환
+
+		- 그래서, Client 에서 Json 형식의 정보를 Server 로 보낼 때, Json 형태의 String Type 으로 변환
+
+	- 클라이언트 > 서버 , 서버 > 클라이언트도 서로를 배려해 Json 형태의 String 으로 변환하여 보낸다.
+
+
+	- 이후, mvc 로 해당 url 에 Post 요청과 함께 Json 형태의 String Type 을 함께 보낸다.
+
+	- contentType = Application_json
+	
+	- accept = Application_json
+	
+	- principal = 앞서 설정한 mockPrincipal ( 가짜 인증 객체 )
+
+
+
+
+
+* @MockBean *
+
+- Test 하려는 Controller 인 User, Product Controller 는 다른 component 에 의해 DI 받고 로직 수행
+
+- DI 를 주입받기 위해 가짜 Bean ( @MockBean ) 을 생성하여 Controller 가 동작할 때, 자동으로 주입받아 수행
+
+
+
+
+
