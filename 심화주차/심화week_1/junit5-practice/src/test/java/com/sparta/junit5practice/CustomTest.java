@@ -4,11 +4,6 @@ import org.junit.jupiter.api.*;
 
 public class CustomTest {
 
-    @BeforeEach
-    void setUp() {
-        System.out.println("내부 클래스에서 BeforeEach 는 어떻게 동작할까?");
-    }
-
     @Test
     @DisplayName("테스트의 내용을 한눈에 알아볼 수 있게 네이밍 해줄 때")
     void test1() {

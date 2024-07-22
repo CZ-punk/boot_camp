@@ -23,3 +23,34 @@ boot_camp ( 단위테스트 )
 	- @TestMethodOrder(MethodOrderer.OrderAnnotation.class) 를 class 단위에 선언
 
 		- @Order(number) annotaion 을 통해 테스트 코드의 순서를 지정하여 수행 가능
+
+		- 참고로 내부 클래스의 테스트 코드도 BeforeEach 하나씩 적용된다.
+
+	- @RepeatedTest(value = 5, name = "반복 테스트 {currentRepetition} / {totalRepetitions}")
+
+		- value: 반복 횟수
+
+		- name: 반복할 메서드의 이름을 명시
+
+			- 이때, {} 중괄호를 통해 옵션을 주면 value 값을 토대로 예시와 같이
+
+			" 현재 반복 횟수 / 총 반복 횟수 " 와 반복 횟수 별 이름을 부여할 수 있다.
+
+		- void repeatTest(RepetitionInfo info):
+			
+			- 해당 애노테이션을 사용하면 RepetitionInfo 객체를 파라미터로 받아서 사용 가능하다.
+
+			- 반복에 대한 정보가 포함되어 메서드 내에서 사용할 수 있다. ( 현재 , 총 반복 횟수 정보 등 )
+
+	- @ParameterizedTest && @ValueSource(ints = {1, 2, 3, 4, 5, 6, 7, 8, 9})
+
+		- 위 애노테이션들은 파라미터값을 활용하여 테스트할 때, 사용
+
+		- @ParametherizedTest 를 달고, @ValueSource() 내부에 파라미터로 쓸 정보들을 주면
+
+		   test code method 의 파라미터와 매핑하여 파라미터를 활용해 테스트 코드 작성 가능
+
+		- 참고로, 파라미터로 준 갯수만큼 반복 수행한다.
+
+		- ex )  void parameterTest(int num) { ... }
+	
