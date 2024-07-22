@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -29,6 +30,11 @@ public class UseTimeAop {
     private void folder() {}
     @Pointcut("execution(* com.sparta.myselectshop.naver.controller.NaverApiController.*(..))")
     private void naver() {}
+
+//    @Before("product()")
+//    public void executeProduct() {
+//        System.out.println("와타시가 Product Controller AOP 의 Before 다!!!");
+//    }
 
     @Around("product() || folder() || naver()")
     public Object execute(ProceedingJoinPoint joinPoint) throws Throwable {

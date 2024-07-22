@@ -147,19 +147,35 @@ PointCut: 부가기능을 핵심기능의 어디에 적용할 지에 대한 위�
 
 
 
+* Spring AOP 내부 동작 흐름 *
+
+
+- AOP 적용 전
+
+client 요청 >> dispatcherServlet >> controller >> return >> dispatcherServlet >> API response
+
+
+- AOP 적용 후
+
+dispatcherServlet >> AOP PROXY ?
+
+AOP Proxy 가 @Aspect ( AOP 애노테이션 ) class 를 찾는다.
+
+해당 aop class 의 Aop 관련 Annotation 을 정보를 읽는다.
+
+요청에 해당하는 Aop 적용 가능한 Annotation 을 찾으면 aop 애노테이션을 적용하여 joinPoint.proceed 수행
+
+ << joinPoint.proceed 는 실제로 요청한 비즈니스 로직 ( 핵심기능 ), ( Client 가 보낸 인자 자동 주입 수행 ) >>
+
+aop annotation 조건에 따라 수행을 마치고 다시 거꾸로 
+
+controller --> @Advice annotation --> AopProxy --> DispatcherServlet  --> Client 로 흘러간다.
 
 
 
+사실 Transactional annotation 도 위와 같이 Proxy 객체가 대신 수행해 요청이 처리된다.
 
 
-
-
-
-
-
-
-
-
-
+JoinPoint.proceed 는 앞, 뒤 수행에서 모두 부가기능을 적용하는 경우인 @Around 에서 사용하는 함수이다.
 
 
