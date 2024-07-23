@@ -12,8 +12,6 @@ spring:
     properties:
       hibernate:
 
-
-
 jwt:
   secret:
     key: 7Iqk7YyM66W07YOA7L2U65Sp7YG065+9U3ByaW5n6rCV7J2Y7Yqc7YSw7LWc7JuQ67mI7J6F64uI64ukLg==
@@ -23,9 +21,6 @@ naver:
   client:
     id: dFk8xhy076ULcflQdF8l
     secret: 9mr3RhaEPY
-
-
-
 
 kakao:
   restApiKey: d0fc91228613a4484fb3a76d45a74f92

@@ -5,17 +5,21 @@ import com.sparta.myselectshop.dto.ProductMypriceRequestDto;
 import com.sparta.myselectshop.dto.ProductRequestDto;
 import com.sparta.myselectshop.dto.ProductResponseDto;
 import com.sparta.myselectshop.entity.*;
+import com.sparta.myselectshop.exception.ProductNotFoundException;
 import com.sparta.myselectshop.naver.dto.ItemDto;
 import com.sparta.myselectshop.repository.FolderRepository;
 import com.sparta.myselectshop.repository.ProductFolderRepository;
 import com.sparta.myselectshop.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Locale;
 
 @Service
 @RequiredArgsConstructor
@@ -24,6 +28,7 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final FolderRepository folderRepository;
     private final ProductFolderRepository productFolderRepository;
+    private final MessageSource messageSource;
 
     public static final int MIN_MY_PRICE = 100;
 
@@ -36,10 +41,10 @@ public class ProductService {
     public ProductResponseDto updateProduct(Long id, ProductMypriceRequestDto requestDto) {
         int myprice = requestDto.getMyprice();
         if (myprice < 100)
-            throw new IllegalArgumentException("유효하지 않은 관심 가격입니다. 최소 " + MIN_MY_PRICE + "원 이상으로 설정해 주세요.");
+            throw new IllegalArgumentException(messageSource.getMessage("below.min.my.price", new Integer[]{MIN_MY_PRICE}, "Wrong Price", Locale.getDefault()));
 
         Product product = productRepository.findById(id).orElseThrow(() ->
-                new NullPointerException("해당 상품을 찾을 수 없습니다."));
+                new ProductNotFoundException(messageSource.getMessage("not.found.product", null, Locale.getDefault())));
 
         product.update(requestDto);
 
@@ -69,7 +74,7 @@ public class ProductService {
     @Transactional
     public void updateBySearch(Long id, ItemDto itemDto) {
         Product product = productRepository.findById(id).orElseThrow(() ->
-                new NullPointerException("해당 상품은 존재하지 않습니다."));
+                new ProductNotFoundException(messageSource.getMessage("not.found.product", null, Locale.getDefault())));
 
         product.updateByItemDto(itemDto);
     }
@@ -77,7 +82,7 @@ public class ProductService {
     public void addFolder(Long productId, Long folderId, User user) {
 
         Product product = productRepository.findById(productId).orElseThrow(
-                () -> new NullPointerException("해당 상품이 존재하지 않습니다."));
+                () -> new ProductNotFoundException(messageSource.getMessage("not.found.product", null, Locale.getDefault())));
 
         Folder folder = folderRepository.findById(folderId).orElseThrow(
                 () -> new NullPointerException("해당 폴더가 존재하지 않습니다."));
