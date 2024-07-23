@@ -295,7 +295,8 @@ function addFolder() {
         window.location.reload();
     })
         .fail(function(xhr, textStatus, errorThrown) {
-            alert("중복된 폴더입니다.");
+            alert(xhr.responseJSON.errorMessage);
+            console.log(xhr.status)
         });
 }
 
@@ -370,7 +371,8 @@ function addInputForProductToFolder(productId, button) {
                     window.location.reload();
                 })
                     .fail(function(xhr, textStatus, errorThrown) {
-                        alert("중복된 폴더입니다.");
+                        alert(xhr.responseJSON.errorMessage);
+                        console.log(xhr.status)
                     });
             });
         },
@@ -423,7 +425,7 @@ function setMyprice() {
 
 function logout() {
     // 토큰 삭제
-    Cookies.remove('Auth    orization', {path: '/'});
+    Cookies.remove('Authorization', {path: '/'});
     window.location.href = host + '/api/user/login-page';
 }
 
