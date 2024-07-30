@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="c9db90b2-de23-4464-bb77-3195bf2ad139" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/../com.spring-cloud.eureka.client.order/src/main/java/com/spring_cloud/eureka/client/order/OrderController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../com.spring-cloud.eureka.client.order/src/main/java/com/spring_cloud/eureka/client/order/OrderService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../com.spring-cloud.eureka.client.order/src/main/java/com/spring_cloud/eureka/client/order/ProductClient.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../com.spring-cloud.eureka.client.product/src/main/java/com/spring_cloud/eureka/client/product/ProductController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/spring_cloud/resilience4j/sample/Product.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/spring_cloud/resilience4j/sample/ProductController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/spring_cloud/resilience4j/sample/ProductService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../SpringBoot_숙련주차/숙련week_2/myselectshop/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/../../SpringBoot_숙련주차/숙련week_2/myselectshop/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../SpringBoot_숙련주차/숙련week_2/myselectshop/src/main/java/com/sparta/myselectshop/config/WebSecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../SpringBoot_숙련주차/숙련week_2/myselectshop/src/main/java/com/sparta/myselectshop/config/WebSecurityConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../SpringBoot_숙련주차/숙련week_2/myselectshop/src/main/java/com/sparta/myselectshop/controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../SpringBoot_숙련주차/숙련week_2/myselectshop/src/main/java/com/sparta/myselectshop/controller/UserController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../SpringBoot_숙련주차/숙련week_2/myselectshop/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/../../SpringBoot_숙련주차/숙련week_2/myselectshop/src/main/resources/application.yml" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$">
+      <ProjectState />
+    </projectState>
+  </component>
+  <component name="ExternalProjectsManager">
+    <system id="GRADLE">
+      <state>
+        <projects_view>
+          <tree_state>
+            <expand>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="sample" type="f1a62948:ProjectNode" />
+              </path>
+            </expand>
+            <select />
+          </tree_state>
+        </projects_view>
+      </state>
+    </system>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 0
+}</component>
+  <component name="ProjectId" id="2juf5hwQ7tMwm6kUINpHgR8GwK8" />
+  <component name="ProjectViewState">
+    <option name="abbreviatePackageNames" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Gradle.Build com.spring-cloud.resilience4j.sample.executor": "Run",
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "Spring Boot.SampleApplication.executor": "Run",
+    "git-widget-placeholder": "main",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/cnhhw/Desktop/boot_camp 사전 학습/MSA/com.spring-cloud.eureka.server/build.gradle",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RunManager">
+    <configuration name="SampleApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="com.spring-cloud.resilience4j.sample.main" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.spring_cloud.resilience4j.sample.SampleApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="c9db90b2-de23-4464-bb77-3195bf2ad139" name="Changes" comment="" />
+      <created>1722241701037</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1722241701037</updated>
+      <workItem from="1722241702067" duration="610000" />
+      <workItem from="1722249962537" duration="2322000" />
+      <workItem from="1722255607300" duration="501000" />
+      <workItem from="1722303279709" duration="9000" />
+      <workItem from="1722306955962" duration="81000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>

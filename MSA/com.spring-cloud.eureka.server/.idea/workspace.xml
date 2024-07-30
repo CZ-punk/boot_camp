@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="17f7a9c8-600c-4ff4-a369-4b309b4662ae" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/../com.spring-cloud.eureka.client.gateway/src/main/java/com/spring_cloud/eureka/client/gateway/CustomPostFilter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../com.spring-cloud.eureka.client.gateway/src/main/java/com/spring_cloud/eureka/client/gateway/CustomPreFilter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../com.spring-cloud.eureka.client.order/src/main/java/com/spring_cloud/eureka/client/order/OrderController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../com.spring-cloud.eureka.client.order/src/main/java/com/spring_cloud/eureka/client/order/OrderService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../com.spring-cloud.eureka.client.order/src/main/java/com/spring_cloud/eureka/client/order/ProductClient.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../com.spring-cloud.eureka.client.product/src/main/java/com/spring_cloud/eureka/client/product/ProductController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../com.spring-cloud.resilience4j.sample/src/main/java/com/spring_cloud/resilience4j/sample/Product.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../com.spring-cloud.resilience4j.sample/src/main/java/com/spring_cloud/resilience4j/sample/ProductController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../com.spring-cloud.resilience4j.sample/src/main/java/com/spring_cloud/resilience4j/sample/ProductService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../SpringBoot_숙련주차/숙련week_2/myselectshop/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/../../SpringBoot_숙련주차/숙련week_2/myselectshop/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../SpringBoot_숙련주차/숙련week_2/myselectshop/src/main/java/com/sparta/myselectshop/config/WebSecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../SpringBoot_숙련주차/숙련week_2/myselectshop/src/main/java/com/sparta/myselectshop/config/WebSecurityConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../SpringBoot_숙련주차/숙련week_2/myselectshop/src/main/java/com/sparta/myselectshop/controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../SpringBoot_숙련주차/숙련week_2/myselectshop/src/main/java/com/sparta/myselectshop/controller/UserController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../SpringBoot_숙련주차/숙련week_2/myselectshop/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/../../SpringBoot_숙련주차/숙련week_2/myselectshop/src/main/resources/application.yml" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$/../com.spring-cloud.eureka.client.first">
+      <ProjectState />
+    </projectState>
+    <projectState path="$PROJECT_DIR$/../com.spring-cloud.eureka.client.gateway">
+      <ProjectState />
+    </projectState>
+    <projectState path="$PROJECT_DIR$/../com.spring-cloud.eureka.client.order">
+      <ProjectState />
+    </projectState>
+    <projectState path="$PROJECT_DIR$/../com.spring-cloud.eureka.client.product">
+      <ProjectState />
+    </projectState>
+    <projectState path="$PROJECT_DIR$/../com.spring-cloud.eureka.client.second">
+      <ProjectState />
+    </projectState>
+    <projectState path="$PROJECT_DIR$">
+      <ProjectState />
+    </projectState>
+  </component>
+  <component name="ExternalProjectsManager">
+    <system id="GRADLE">
+      <state>
+        <projects_view>
+          <tree_state>
+            <expand />
+            <select />
+          </tree_state>
+        </projects_view>
+      </state>
+    </system>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Interface" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
+  </component>
+  <component name="KubernetesApiProvider">{
+  &quot;isMigrated&quot;: true
+}</component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 8
+}</component>
+  <component name="ProjectId" id="2juOJSsmiMm0QME8V5heg8I8ZM3" />
+  <component name="ProjectViewState">
+    <option name="abbreviatePackageNames" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Gradle.Build com.spring-cloud.eureka.client.first.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.Build com.spring-cloud.eureka.client.gateway.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.Build com.spring-cloud.eureka.client.order.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.Build com.spring-cloud.eureka.client.product.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.Build com.spring-cloud.eureka.client.second.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.Build com.spring-cloud.eureka.server.executor&quot;: &quot;Run&quot;,
+    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
+    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
+    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
+    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;Spring Boot.FirstApplication.executor&quot;: &quot;Run&quot;,
+    &quot;Spring Boot.GatewayApplication.executor&quot;: &quot;Run&quot;,
+    &quot;Spring Boot.OrderApplication.executor&quot;: &quot;Run&quot;,
+    &quot;Spring Boot.ProductApplication.executor&quot;: &quot;Run&quot;,
+    &quot;Spring Boot.ProductApplication:19092.executor&quot;: &quot;Run&quot;,
+    &quot;Spring Boot.ProductApplication:19093.executor&quot;: &quot;Run&quot;,
+    &quot;Spring Boot.ProductApplication:19094.executor&quot;: &quot;Run&quot;,
+    &quot;Spring Boot.SecondApplication.executor&quot;: &quot;Run&quot;,
+    &quot;Spring Boot.ServerApplication.executor&quot;: &quot;Run&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/cnhhw/Desktop/boot_camp 사전 학습/MSA/com.spring-cloud.eureka.client.gateway&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
+    &quot;run.configurations.included.in.services&quot;: &quot;true&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;configurable.group.build&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  }
+}</component>
+  <component name="ReactorSettings">
+    <option name="notificationShown" value="true" />
+  </component>
+  <component name="RunManager" selected="Spring Boot.ServerApplication">
+    <configuration name="GatewayApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="com.spring-cloud.eureka.client.gateway.main" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.spring_cloud.eureka.client.gateway.GatewayApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="OrderApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="com.spring-cloud.eureka.client.order.main" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.spring_cloud.eureka.client.order.OrderApplication" />
+      <extension name="net.ashald.envfile">
+        <option name="IS_ENABLED" value="false" />
+        <option name="IS_SUBST" value="false" />
+        <option name="IS_PATH_MACRO_SUPPORTED" value="false" />
+        <option name="IS_IGNORE_MISSING_FILES" value="false" />
+        <option name="IS_ENABLE_EXPERIMENTAL_INTEGRATIONS" value="false" />
+        <ENTRIES>
+          <ENTRY IS_ENABLED="true" PARSER="runconfig" IS_EXECUTABLE="false" />
+        </ENTRIES>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ProductApplication:19093" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true">
+      <module name="com.spring-cloud.eureka.client.product.main" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.spring_cloud.eureka.client.product.ProductApplication" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.spring_cloud.eureka.client.product.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <extension name="net.ashald.envfile">
+        <option name="IS_ENABLED" value="false" />
+        <option name="IS_SUBST" value="false" />
+        <option name="IS_PATH_MACRO_SUPPORTED" value="false" />
+        <option name="IS_IGNORE_MISSING_FILES" value="false" />
+        <option name="IS_ENABLE_EXPERIMENTAL_INTEGRATIONS" value="false" />
+        <ENTRIES>
+          <ENTRY IS_ENABLED="true" PARSER="runconfig" IS_EXECUTABLE="false" />
+        </ENTRIES>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ProductApplication:19094" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+      <module name="com.spring-cloud.eureka.client.product.main" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.spring_cloud.eureka.client.product.ProductApplication" />
+      <option name="VM_PARAMETERS" value="-Dserver.port=19094" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.spring_cloud.eureka.client.product.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <extension name="net.ashald.envfile">
+        <option name="IS_ENABLED" value="false" />
+        <option name="IS_SUBST" value="false" />
+        <option name="IS_PATH_MACRO_SUPPORTED" value="false" />
+        <option name="IS_IGNORE_MISSING_FILES" value="false" />
+        <option name="IS_ENABLE_EXPERIMENTAL_INTEGRATIONS" value="false" />
+        <ENTRIES>
+          <ENTRY IS_ENABLED="true" PARSER="runconfig" IS_EXECUTABLE="false" />
+        </ENTRIES>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ServerApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="com.spring-cloud.eureka.server.main" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.spring_cloud.eureka.server.ServerApplication" />
+      <extension name="net.ashald.envfile">
+        <option name="IS_ENABLED" value="false" />
+        <option name="IS_SUBST" value="false" />
+        <option name="IS_PATH_MACRO_SUPPORTED" value="false" />
+        <option name="IS_IGNORE_MISSING_FILES" value="false" />
+        <option name="IS_ENABLE_EXPERIMENTAL_INTEGRATIONS" value="false" />
+        <ENTRIES>
+          <ENTRY IS_ENABLED="true" PARSER="runconfig" IS_EXECUTABLE="false" />
+        </ENTRIES>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="Spring Boot.GatewayApplication" />
+      <item itemvalue="Spring Boot.OrderApplication" />
+      <item itemvalue="Spring Boot.ServerApplication" />
+      <item itemvalue="Spring Boot.ProductApplication:19094" />
+      <item itemvalue="Spring Boot.ProductApplication:19093" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Spring Boot.ProductApplication:19093" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="17f7a9c8-600c-4ff4-a369-4b309b4662ae" name="Changes" comment="" />
+      <created>1722233423664</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1722233423664</updated>
+      <workItem from="1722233424691" duration="738000" />
+      <workItem from="1722234176745" duration="4681000" />
+      <workItem from="1722253345007" duration="1999000" />
+      <workItem from="1722307038841" duration="2989000" />
+      <workItem from="1722310045742" duration="2804000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>
