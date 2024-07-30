@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="nbcdocker.learning.cicd_aws.CicdApplicationTests" tests="2" skipped="0" failures="0" errors="0" timestamp="2024-07-24T04:32:39" hostname="LAPTOP-E07IQGAQ" time="1.723">
+  <properties/>
+  <testcase name="/healthz 테스트" classname="nbcdocker.learning.cicd_aws.CicdApplicationTests" time="1.718"/>
+  <testcase name="contextLoads()" classname="nbcdocker.learning.cicd_aws.CicdApplicationTests" time="0.003"/>
+  <system-out><![CDATA[13:32:36.113 [Test worker] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [nbcdocker.learning.cicd_aws.CicdApplicationTests]: CicdApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+13:32:36.211 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration nbcdocker.learning.cicd_aws.CicdApplication for test class nbcdocker.learning.cicd_aws.CicdApplicationTests
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::                (v3.2.0)
+
+2024-07-24T13:32:36.765+09:00  INFO 19336 --- [    Test worker] n.l.cicd_aws.CicdApplicationTests        : Starting CicdApplicationTests using Java 21.0.1 with PID 19336 (started by cnhhw in C:\Users\cnhhw\Desktop\cicd-aws)
+2024-07-24T13:32:36.768+09:00  INFO 19336 --- [    Test worker] n.l.cicd_aws.CicdApplicationTests        : No active profile set, falling back to 1 default profile: "default"
+2024-07-24T13:32:38.059+09:00  INFO 19336 --- [    Test worker] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 0 (http)
+2024-07-24T13:32:38.072+09:00  INFO 19336 --- [    Test worker] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2024-07-24T13:32:38.073+09:00  INFO 19336 --- [    Test worker] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.16]
+2024-07-24T13:32:38.147+09:00  INFO 19336 --- [    Test worker] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2024-07-24T13:32:38.148+09:00  INFO 19336 --- [    Test worker] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1340 ms
+2024-07-24T13:32:39.083+09:00  INFO 19336 --- [    Test worker] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 62425 (http) with context path ''
+2024-07-24T13:32:39.097+09:00  INFO 19336 --- [    Test worker] n.l.cicd_aws.CicdApplicationTests        : Started CicdApplicationTests in 2.696 seconds (process running for 4.003)
+2024-07-24T13:32:40.664+09:00  INFO 19336 --- [o-auto-1-exec-3] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-07-24T13:32:40.665+09:00  INFO 19336 --- [o-auto-1-exec-3] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2024-07-24T13:32:40.666+09:00  INFO 19336 --- [o-auto-1-exec-3] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+]]></system-out>
+  <system-err><![CDATA[WARNING: A Java agent has been loaded dynamically (C:\Users\cnhhw\.gradle\caches\modules-2\files-2.1\net.bytebuddy\byte-buddy-agent\1.14.10\90ed94ac044ea8953b224304c762316e91fd6b31\byte-buddy-agent-1.14.10.jar)
+WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future release
+]]></system-err>
+</testsuite>
