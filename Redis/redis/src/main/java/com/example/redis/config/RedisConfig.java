@@ -1,30 +1,23 @@
-package com.example.redis;
+package com.example.redis.config;
 
+import com.example.redis.domain.ItemDto;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializer;
 
 @Configuration
 public class RedisConfig {
 
-
     @Bean
-    public RedisTemplate<String, ItemDto> itemRedisTemplate(
-            RedisConnectionFactory connectionFactory
-            // yml 파일 정보를 보고 Redis DB 에 설정된 ConnectionFactory
-    ) {
-
+    public RedisTemplate<String, ItemDto> itemDtoRedisTemplate(RedisConnectionFactory connectionFactory) {
         RedisTemplate<String, ItemDto> template = new RedisTemplate<>();
         template.setConnectionFactory(connectionFactory);
-        // Key 를 Redis 로 넘겨줄 때,
-        // 직렬화/역직렬화를 어떤 타입으로 넘기는지 명시
         template.setKeySerializer(RedisSerializer.string());
-        // Value 를 Redis 로 넘길 때, Json 형태 넘김
-        template.setValueSerializer(RedisSerializer.json());
+        template.setValueSerializer(new GenericJackson2JsonRedisSerializer());
         return template;
     }
-
 
 }
